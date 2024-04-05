@@ -7,11 +7,9 @@ makedocs(;
     modules=[QEDprobing],
     authors="Uwe Hernandez Acosta <u.hernandez@hzdr.de",
     sitename="QEDprobing.jl",
-    repo=Documenter.Remotes.URL(
-        "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/lblob/{commit}{path}#{line}",
-    ),
+    repo = Documenter.Remotes.URL("https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/lblob/{commit}{path}#{line}"),
     format=Documenter.HTML(;
-        repolink="https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/lblob/{commit}{path}#{line}",
+        repolink = "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/lblob/{commit}{path}#{line}",
         canonical="https://qedapplications.gitlab.io/QEDprobing.jl",
         edit_link="main",
         assets=String[],

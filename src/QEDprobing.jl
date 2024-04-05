@@ -1,9 +1,9 @@
 module QEDprobing
 
-# Write your package code here.
+using QEDbase
+using QEDprocesses
 
-function dummy_func()
-    return 1
-end
+# QEDjl patches
+include("patch_QEDjl/patch_QEDprocesses.jl")
 
 end

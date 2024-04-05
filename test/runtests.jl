@@ -1,10 +1,12 @@
 using QEDprobing
 using Test
+using SafeTestsets
 
 @testset "QEDprobing.jl" begin
-    # Write your tests here.
-
-    @testset "dummy" begin
-        @test QEDprobing.dummy_func() == 1
+    begin
+        # patches
+        @time @safetestset "patch QEDprocesses.jl" begin
+            include("patch_QEDjl/patch_QEDprocesses.jl")
+        end
     end
 end

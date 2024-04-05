@@ -200,7 +200,7 @@ deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[deps.QEDprobing]]
-path = ".."
+path = "/Users/uwe/Work/jlProjects/QEDjl-project/applications/QEDprobing.jl"
 uuid = "fdc9d422-4d58-410b-839e-b42714d9ecda"
 version = "1.0.0-DEV"
 

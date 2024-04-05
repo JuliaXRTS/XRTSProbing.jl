@@ -34,20 +34,26 @@ format:
 unittest:
   stage: test
   script:
-    - julia --project=@. -e "import Pkg; Pkg.test(; coverage = false)"
+    - |
+      julia --project=@. -e '
+        using Pkg
+        Pkg.build()
+        Pkg.test(coverage=true)'
+  coverage: /Test coverage (\d+\.\d+%)/
+  after_script:
+    - |
+      julia -e '
+        using Pkg
+        Pkg.add("Coverage")
+        using Coverage
+        c, t = get_summary(process_folder())
+        using Printf
+        @printf "Test coverage %.2f%%\n" 100c / t'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
 
-coverage:
-  stage: test
-  script:
-    - julia --project=@. -e "import Pkg; Pkg.test(; coverage = true)"
-    - julia --project=test/coverage -e 'import Pkg; Pkg.instantiate()'
-    - julia --project=test/coverage test/coverage/coverage-summary.jl
-  only:
-    - main
 
 pages:
   stage: deploy

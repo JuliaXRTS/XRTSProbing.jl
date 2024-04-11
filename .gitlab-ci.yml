@@ -66,4 +66,3 @@ pages:
       - public
   only:
     - main
-    - fix-doc_building

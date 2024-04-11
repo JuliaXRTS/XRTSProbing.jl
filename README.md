@@ -2,7 +2,7 @@
 
 [![Dev](https://img.shields.io/badge/docs-main-blue.svg)](https://qedjl-applications.pages.hzdr.de/QEDprobing.jl)
 [![Build Status](https://codebase.helmholtz.cloud/qedapplications/QEDprobing.jl/badges/main/pipeline.svg)](https://codebase.helmholtz.cloud/qedapplications/QEDprobing.jl/pipelines)
-![coverage](https://codebase.helmholtz.cloud/qedapplications/QEDprobing.jl/badges/main/coverage.svg?job=coverage)
+![coverage](https://codebase.helmholtz.cloud/qedapplications/QEDprobing.jl/badges/readme-links/coverage.svg?job=coverage)
 
 `QEDprobing.jl` is an experimental implementation of the interaction of photons or laser
 fields with a cloud of distributed electrons. The code will change rapidly without proper

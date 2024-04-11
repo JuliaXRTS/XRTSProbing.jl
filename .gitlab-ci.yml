@@ -2,8 +2,7 @@
 # credits: https://gitlab.com/tkpapp/GitlabJuliaDemo.jl
 #
 
-
-image: julia:latest       # image comes from Docker hub
+image: julia:latest # image comes from Docker hub
 
 stages:
   - linter
@@ -14,7 +13,7 @@ before_script:
   # workaround for https://github.com/JuliaDocs/Documenter.jl/issues/686
   - apt-get -qq update; apt-get -y install git
   - julia --project=@. -e "import Pkg; Pkg.build()"
-  - julia --project=@. add_dev_packages.jl 
+  - julia --project=@. add_dev_packages.jl
 
 format:
   stage: linter
@@ -55,15 +54,15 @@ unittest:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
 
-
 pages:
   stage: deploy
   script:
     - julia --project=docs -e 'using Pkg; Pkg.instantiate(); Pkg.develop(PackageSpec(path=pwd()))'
+    - julia --project=docs add_dev_packages.jl
     - julia --project=docs --color=yes docs/make.jl
     - mv docs/build public # move to the directory picked up by Gitlab pages
   artifacts:
     paths:
       - public
   only:
-  - main
+    - main

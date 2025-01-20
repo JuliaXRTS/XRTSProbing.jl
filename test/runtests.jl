@@ -14,7 +14,7 @@ for (root, dirs, files) in walkdir(@__DIR__)
             continue
         end
         title = titlecase(replace(splitext(file[6:end])[1], "-" => " "))
-        @testset "$title" begin
+        @testset "$title" verbose = true begin
             include(file)
         end
     end

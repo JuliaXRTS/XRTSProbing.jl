@@ -23,13 +23,11 @@ format:
     - julia --project=.formatting .formatting/format_all.jl
     - "[[ -d /tmp/.julia ]] && mv /tmp/.julia ."
   variables:
-    CI_JULIA_VERSION: "1.7"
+    CI_JULIA_VERSION: "1.11"
     JULIA_DEPOT_PATH: /tmp/.julia
   allow_failure: true
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
 
 unittest:
   stage: test
@@ -50,9 +48,7 @@ unittest:
         using Printf
         @printf "Test coverage %.2f%%\n" 100c / t'
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
 
 pages:
   stage: deploy

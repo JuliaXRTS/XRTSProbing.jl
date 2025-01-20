@@ -1,9 +1,8 @@
 module QEDprobing
 
-using QEDbase
-using QEDprocesses
 
-# QEDjl patches
-include("patch_QEDjl/patch_QEDprocesses.jl")
+function hello_world()
+    return "Hello, World!"
+end
 
 end

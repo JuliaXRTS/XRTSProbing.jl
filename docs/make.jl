@@ -1,21 +1,21 @@
 using QEDprobing
 using Documenter
 
-DocMeta.setdocmeta!(QEDprobing, :DocTestSetup, :(using QEDprobing); recursive=true)
+DocMeta.setdocmeta!(QEDprobing, :DocTestSetup, :(using QEDprobing); recursive = true)
+
+const page_rename = Dict("developer.md" => "Developer docs") # Without the numbers
+const numbered_pages = [
+    file for file in readdir(joinpath(@__DIR__, "src")) if
+    file != "index.md" && splitext(file)[2] == ".md"
+]
 
 makedocs(;
-    modules=[QEDprobing],
-    checkdocs=:exports,
-    authors="Uwe Hernandez Acosta <u.hernandez@hzdr.de",
-    sitename="QEDprobing.jl",
-    repo=Documenter.Remotes.GitLab(
-        "codebase.helmholtz.cloud", "qedjl-applications", "QEDprobing.jl"
-    ),
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://qedapplications.gitlab.io/QEDprobing.jl",
-        #edit_link="main",
-        assets=String[],
-    ),
-    pages=["Home" => "index.md"],
+    modules = [QEDprobing],
+    authors = "Uwe Hernandez Acosta <u.hernandez@hzdr.de>",
+    repo = "https://github.com/QEDjl-project/QEDprobing.jl/blob/{commit}{path}#{line}",
+    sitename = "QEDprobing.jl",
+    format = Documenter.HTML(; canonical = "https://QEDjl-project.github.io/QEDprobing.jl"),
+    pages = ["index.md"; numbered_pages],
 )
+
+deploydocs(; repo = "github.com/QEDjl-project/QEDprobing.jl")

@@ -16,6 +16,7 @@ before_script:
   - julia --project=@. add_dev_packages.jl
 
 format:
+  # consider using pre-commit here
   stage: linter
   script:
     - "[[ -d .julia ]] && mv .julia /tmp"

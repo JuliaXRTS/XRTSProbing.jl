@@ -12,10 +12,17 @@ const numbered_pages = [
 makedocs(;
     modules = [QEDprobing],
     authors = "Uwe Hernandez Acosta <u.hernandez@hzdr.de>",
-    repo = "https://github.com/QEDjl-project/QEDprobing.jl/blob/{commit}{path}#{line}",
+    repo = "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/blob/{commit}{path}#{line}",
+    #repo = "https://github.com/QEDjl-project/QEDprobing.jl/blob/{commit}{path}#{line}",
     sitename = "QEDprobing.jl",
-    format = Documenter.HTML(; canonical = "https://QEDjl-project.github.io/QEDprobing.jl"),
+    #format = Documenter.HTML(; canonical = "https://QEDjl-project.github.io/QEDprobing.jl"),
+    format = Documenter.HTML(;
+        prettyurls = get(ENV, "CI", "false") == "true",
+        repolink = "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/blob/{commit}{path}#{line}",
+        canonical = "https://qedjl-applications.pages.hzdr.de/qedprobing.jl",
+        assets = String[],
+    ),
     pages = ["index.md"; numbered_pages],
 )
 
-deploydocs(; repo = "github.com/QEDjl-project/QEDprobing.jl")
+#deploydocs(; repo = "github.com/QEDjl-project/QEDprobing.jl")

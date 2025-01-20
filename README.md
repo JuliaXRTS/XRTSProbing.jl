@@ -14,7 +14,6 @@ restore this, if the package is moved to github
 [![DOI](https://zenodo.org/badge/DOI/FIXME)](https://doi.org/FIXME)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![All Contributors](https://img.shields.io/github/all-contributors/QEDjl-project/QEDprobing.jl?labelColor=5e1ec7&color=c0ffee&style=flat-square)](#contributors)
-[![BestieTemplate](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JuliaBesties/BestieTemplate.jl/main/docs/src/assets/badge.json)](https://github.com/JuliaBesties/BestieTemplate.jl)
 -->
 
 <!--REMOVE IF REPO IS MOVED TO GITHUB-->
@@ -23,6 +22,7 @@ restore this, if the package is moved to github
 [![pipeline status](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/badges/main/pipeline.svg)](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/commits/main)
 [![coverage report](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/badges/main/coverage.svg)](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/commits/main)
 [![Latest Release](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/badges/release.svg)](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/releases)
+[![BestieTemplate](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JuliaBesties/BestieTemplate.jl/main/docs/src/assets/badge.json)](https://github.com/JuliaBesties/BestieTemplate.jl)
 
 `QEDprobing.jl` is an experimental implementation of the interaction of photons or laser
 fields with a cloud of distributed electrons. The code will change rapidly without proper

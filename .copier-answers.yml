@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+AddCopierCI: false
+AnswerStrategy: recommended-ask
+Authors: Uwe Hernandez Acosta <u.hernandez@hzdr.de>
+CheckExplicitImports: false
+CodeOfConductContact: u.hernandez@hzdr.de
+ConfigIndentation: 2
+JuliaIndentation: 4
+JuliaMinVersion: '1.10'
+License: MIT
+LicenseCopyrightHolders: Uwe Hernandez Acosta
+MarkdownIndentation: 2
+PackageName: QEDprobing
+PackageOwner: QEDjl-project
+PackageUUID: b1dbe593-c732-5f6f-b35b-20dd91e7daab
+RunJuliaNightlyOnCI: false
+UseCirrusCI: false
+_commit: v0.14.1
+_src_path: https://github.com/JuliaBesties/BestieTemplate.jl

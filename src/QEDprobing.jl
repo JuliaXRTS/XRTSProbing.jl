@@ -3,7 +3,7 @@ module QEDprobing
 export PertQED
 export FlatPhaseSpaceSampler, randmom
 
-export ThomsonScattering
+export Thomson
 export ElabPhotonSphSystem
 
 using Random

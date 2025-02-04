@@ -40,7 +40,7 @@ Represents the ps system with init electron at rest and the out photon described
 struct ElabPhotonSphSystem <: AbstractPhasespaceDefinition end
 
 function QEDbase._generate_incoming_momenta(
-    proc::ThomsonScattering,
+    proc::Thomson,
     model::PerturbativeQED,
     in_ps_def::ElabPhotonSphSystem,
     in_ps::NTuple{1,T},
@@ -54,7 +54,7 @@ function QEDbase._generate_incoming_momenta(
 end
 
 function QEDbase._generate_outgoing_momenta(
-    proc::ThomsonScattering,
+    proc::Thomson,
     model::PerturbativeQED,
     phase_space_def::ElabPhotonSphSystem,
     in_phase_space::NTuple{1,T},

@@ -1,25 +1,64 @@
-"""
 
-    _TS_diffCS_pol_spin_sum(cth)
+# General Thomson scattering
 
-Return unpolarized differential cross section of Thomson scattering as a function of the cosine of the scattering angle.
+@inline function QEDbase._incident_flux(
+    psp::InPhaseSpacePoint{<:Thomson,PerturbativeQED,<:ElabPhotonSphSystem},
+)
+    om = getE(momentum(psp, Incoming(), Photon()))
+    return om
+end
 
-!!! note "Internal usage"
+@inline function QEDbase._averaging_norm(proc::Thomson)
+    return inv(incoming_multiplicity(proc))
+end
 
-    This function is only for internal usage. To access the differential cross section of Thomson scattering, use the
-    appropriate interface.
+@inline function QEDbase._is_in_phasespace(psp::PhaseSpacePoint{<:Thomson,PerturbativeQED})
+    return isapprox(sum(momenta(psp, Incoming())), sum(momenta(psp, Outgoing())))
+end
 
-"""
-function _TS_diffCS_pol_spin_sum(cth)
-    return ALPHA_SQUARE / 2 * (1 + cth^2)
-    #return ALPHA_SQUARE / 2 * (1 + cth^2)
+@inline function QEDbase._phase_space_factor(
+    psp::PhaseSpacePoint{<:Thomson,PerturbativeQED,<:ElabPhotonSphSystem},
+)
+    om = getE(momentum(psp, Incoming(), Photon()))
+    return om / (16 * pi^2)
+end
+
+# polarized
+function QEDbase._matrix_element_square(
+    psp::PhaseSpacePoint{
+        Thomson{AllSpin,INPOL,AllSpin,OUTPOL},
+        PerturbativeQED,
+        <:ElabPhotonSphSystem,
+    },
+) where {INPOL<:AbstractDefinitePolarization,OUTPOL<:AbstractDefinitePolarization}
+    in_photon_mom = momentum(psp, Incoming(), Photon())
+    in_photon_pol = _spin_or_pol(process(psp), Photon(), Incoming())
+    in_pol_vec = base_state(Photon(), Incoming(), in_photon_mom, in_photon_pol)
+
+
+    out_photon_mom = momentum(psp, Outgoing(), Photon())
+    out_photon_pol = _spin_or_pol(process(psp), Photon(), Outgoing())
+    out_pol_vec = base_state(Photon(), Outgoing(), out_photon_mom, out_photon_pol)
+
+    pol_prod = in_pol_vec * out_pol_vec
+
+
+    return 8 * ELEMENTARY_CHARGE_SQUARE^2 * pol_prod^2
+end
+
+# unpolarized
+function QEDbase._matrix_element_square(
+    psp::PhaseSpacePoint{PROC,PerturbativeQED,<:ElabPhotonSphSystem},
+) where {PROC<:Thomson{AllSpin,AllPol,AllSpin,AllPol}}
+    cth = getCosTheta(momentum(psp, Outgoing(), Photon()))
+    return 8 * ELEMENTARY_CHARGE_SQUARE^2 * (one(cth) + cth^2)
 end
 
 function QEDbase.unsafe_differential_cross_section(
     psp::PhaseSpacePoint{
-        QEDprobing.ThomsonScattering,
+        Thomson{AllSpin,AllPol,AllSpin,AllPol},
         PerturbativeQED,
-        QEDprobing.ElabPhotonSphSystem,
+        <:ElabPhotonSphSystem,
     },
 )
     k_prime = momentum(psp, Outgoing(), Photon())
@@ -27,8 +66,6 @@ function QEDbase.unsafe_differential_cross_section(
     return QEDprobing._TS_diffCS_pol_spin_sum(cth)
 end
 
-@inline function QEDbase._is_in_phasespace(
-    psp::PhaseSpacePoint{<:ThomsonScattering,PerturbativeQED},
-)
-    return isapprox(sum(momenta(psp, Incoming())), sum(momenta(psp, Outgoing())))
+function _TS_diffCS_pol_spin_sum(cth)
+    return ALPHA_SQUARE / 2 * (1 + cth^2)
 end

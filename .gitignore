@@ -10,3 +10,8 @@ coverage
 docs/build/
 env
 node_modules
+
+*.ipynb
+DEV-*
+TEST-*
+.ipynb_checkpoints

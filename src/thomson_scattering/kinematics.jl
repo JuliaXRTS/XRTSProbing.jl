@@ -66,3 +66,20 @@ function QEDbase._generate_outgoing_momenta(
     moms = _TS_momenta_elab_sph(om, cth, phi)
     return @inbounds (moms[3], moms[4])
 end
+
+function _coordinate_boundaries(::Thomson, ::PerturbativeQED, ::ElabPhotonSphSystem)
+    return (-1.0, 0.0), (1.0, 2 * pi)
+end
+
+# TODO: extent PSL interface
+# - include a function _coordinate_boundaries(proc,model,psl) which return two
+# tuples: left and right boundaries of every coordinate.
+# - this could also include cuts in the future
+
+# TODO: extent PSL interface
+# - degree of freedom == number of coordinates which need to be passed in
+# example: CoordMap(Compton,PertQED,PSL) might get (om,cth,phi) -> dof=3
+# but: CoordMapCached(Compton,PertQED,PSL,om) gets (cth,phi) -> dof = 2
+
+# For now, we work on PSDEFs, cached DiffCS and simple implementations of the
+# boundaries

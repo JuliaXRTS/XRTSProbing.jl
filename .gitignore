@@ -13,5 +13,4 @@ node_modules
 
 *.ipynb
 DEV-*
-TEST-*
 .ipynb_checkpoints

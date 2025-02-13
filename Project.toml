@@ -4,19 +4,23 @@ authors = ["Uwe Hernandez Acosta <u.hernandez@hzdr.de"]
 version = "1.0.0-DEV"
 
 [deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 QEDbase = "10e22c08-3ccb-4172-bfcf-7d7aa3d04d93"
 QEDcore = "35dc0263-cb5f-4c33-a114-1d7f54ab753e"
 QEDevents = "fc3ce04a-5be5-4f3a-acff-eceaab723759"
 QEDprocesses = "46de9c38-1bb3-4547-a1ec-da24d767fdad"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
+Distributions = "0.25.117"
 QEDbase = "0.3.0"
 QEDcore = "0.2.0"
 QEDevents = "0.2.0"
 QEDprocesses = "0.3.0"
 Random = "1.11.0"
 SafeTestsets = "0.1.0"
+StaticArrays = "1.9.12"
 julia = "1.6"
 
 [extras]

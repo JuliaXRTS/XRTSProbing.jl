@@ -59,3 +59,16 @@ function generate_events(rng::AbstractRNG, vp::VegasProposal, n::Int)
 
     return dest
 end
+
+
+# TODO:
+# - think of an interface which also evaluates a given dcs and returns dcs*jac
+function _generate_coords(rng::AbstractRNG, vp::VegasProposal, n::Int)
+
+    D = ndims(vp)
+    y = rand(rng, n, D)
+    coords = _vegas_map(vp.vgrid, y)
+    JAC = _jac_vegas_map(vp.vgrid, y)
+
+    return coords, JAC
+end

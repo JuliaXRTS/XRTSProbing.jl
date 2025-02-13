@@ -44,4 +44,10 @@ include("proposal/vegas/refine.jl")
 include("proposal/vegas/training.jl")
 include("proposal/vegas/sampler.jl")
 
+include("max_finder/types.jl")
+include("max_finder/findmax.jl")
+include("max_finder/naive.jl")
+include("max_finder/quantile_reduction.jl")
+
+
 end

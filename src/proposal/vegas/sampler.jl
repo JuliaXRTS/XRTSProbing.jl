@@ -72,3 +72,8 @@ function _generate_coords(rng::AbstractRNG, vp::VegasProposal, n::Int)
 
     return coords, JAC
 end
+
+# TODO:
+# - consider implementing `sample(rng,dcs,sampler)` function (as part of the sampler
+# interface), where `dcs` could be any function callable on the output of the sampler
+# - this would unify the sampling process for max-finding and event generation

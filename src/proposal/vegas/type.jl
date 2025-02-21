@@ -75,7 +75,9 @@ end
 
 # Vegas proposal
 
-struct VegasProposal{CS,T,G} <: ScatteringProcessDistribution
+abstract type AbstractProposalDistribution <: ScatteringProcessDistribution end
+
+struct VegasProposal{CS,T,G} <: AbstractProposalDistribution
     dcs::CS
     alpha::T
     weighted_tot_cs::Ref{T}

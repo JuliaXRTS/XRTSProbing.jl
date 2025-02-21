@@ -10,7 +10,6 @@ using Test
 using SafeTestsets
 
 begin
-    #=
     @safetestset "Grid" begin
         include("vegas/grid.jl")
     end
@@ -22,7 +21,7 @@ begin
     @safetestset "Jac" begin
         include("vegas/jac.jl")
     end
-    =#
+
     @safetestset "bin avg" begin
         include("vegas/bin_avg.jl")
     end

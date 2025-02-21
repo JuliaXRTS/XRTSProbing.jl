@@ -1,7 +1,7 @@
 function train_iter!(
     rng::AbstractRNG,
-    vp::VegasProposal;
-    ncalls = 10000,
+    vp::VegasProposal,
+    ncalls::Int = 10000,
     # other training parameters
 )
     vg = vp.vgrid
@@ -54,8 +54,16 @@ function train_iter!(
     return (I, var)
 end
 
-# implement this!
-function train!(rng, vp::VegasProposal, niter, ncalls) end
+# TODO:
+# - test this!
+# - enhance this with some training analysis (e.g. enable short-cut if training was
+# sufficient before reaching niter)
+function train!(rng, vp::VegasProposal, niter, ncalls)
+    for _ = 1:niter
+        train_iter!(rng, vp, ncalls)
+    end
+    return nothing
+end
 
 
 # TODO: GPU training

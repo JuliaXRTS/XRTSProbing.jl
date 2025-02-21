@@ -1,8 +1,11 @@
+
+abstract type AbstractDifferentialCrossSection end
+
 struct DifferentialCrossSection{
     PROC<:AbstractProcessDefinition,
     MODEL<:AbstractModelDefinition,
     PSDEF<:AbstractPhasespaceDefinition,
-}
+} <: AbstractDifferentialCrossSection
     proc::PROC
     model::MODEL
     ps_def::PSDEF
@@ -28,7 +31,7 @@ struct DifferentialCrossSectionCached{
     MODEL<:AbstractModelDefinition,
     PSDEF<:AbstractPhasespaceDefinition,
     COORDS<:Tuple,
-}
+} <: AbstractDifferentialCrossSection
     proc::PROC
     model::MODEL
     ps_def::PSDEF

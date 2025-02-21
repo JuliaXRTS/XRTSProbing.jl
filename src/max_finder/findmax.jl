@@ -1,5 +1,5 @@
 
-function findmax(
+function Base.findmax(
     rng::AbstractRNG,
     dcs::DifferentialCrossSectionCached,
     method::AbstractSampleBasedMaxFinder,

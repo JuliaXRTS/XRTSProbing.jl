@@ -15,6 +15,10 @@ QEDcore.process(d::DifferentialCrossSection) = d.proc
 QEDcore.model(d::DifferentialCrossSection) = d.model
 QEDcore.phase_space_definition(d::DifferentialCrossSection) = d.ps_def
 
+
+#ntuple(i->coords[i],2),ntuple(i->coords[2+i],3)
+
+
 function (diffCS::DifferentialCrossSection)(in_coords::Tuple, out_coords::Tuple)
     psp = PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.ps_def, in_coords, out_coords)
     return differential_cross_section(psp)

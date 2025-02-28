@@ -6,6 +6,11 @@ export FlatPhaseSpaceSampler, randmom
 export Thomson
 export ElabPhotonSphSystem
 
+# structure factor
+export temperature, betabar
+export LindhardDRF
+
+
 export DifferentialCrossSection, DifferentialCrossSectionCached
 
 export VegasGrid, VegasProposal
@@ -25,6 +30,8 @@ using QEDcore
 using QEDprocesses
 using QEDevents
 using StaticArrays
+using LogExpFunctions
+using QuadGK
 
 function hello_world()
     return "Hello, World!"
@@ -39,6 +46,12 @@ include("thomson_scattering/process.jl")
 include("thomson_scattering/kinematics.jl")
 include("thomson_scattering/cross_section.jl")
 include("thomson_scattering/sampler.jl")
+
+include("structure_factor/abstract.jl")
+include("structure_factor/dynamic/electron_electron/utils.jl")
+include("structure_factor/dynamic/electron_electron/types.jl")
+include("structure_factor/dynamic/electron_electron/response_function/utils.jl")
+include("structure_factor/dynamic/electron_electron/response_function/lindhard.jl")
 
 include("setup.jl")
 include("events.jl")

@@ -1,4 +1,4 @@
-
+#=
 # TODO: introduce `method`, where inversion sampling could be another possibility
 # (the current one could be called flat rejection)
 struct SimpleThomsonSampler{T} <: ScatteringProcessDistribution
@@ -53,3 +53,4 @@ end
 function QEDevents._weight(d::SimpleThomsonSampler, psp::PhaseSpacePoint)
     return unsafe_differential_cross_section(psp)
 end
+=#

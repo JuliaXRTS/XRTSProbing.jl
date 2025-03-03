@@ -4,7 +4,7 @@ export PertQED
 export FlatPhaseSpaceSampler, randmom
 
 export Thomson
-export ElabPhotonSphSystem
+export PhotonSphericalLayout
 
 # structure factor
 export temperature, betabar
@@ -39,6 +39,7 @@ end
 
 include("patch_QEDprocesses.jl")
 include("patch_QEDevents.jl")
+include("patch_QEDbase.jl")
 
 include("constants.jl")
 

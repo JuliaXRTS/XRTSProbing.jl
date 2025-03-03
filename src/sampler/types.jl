@@ -12,7 +12,7 @@ end
 
 QEDbase.process(eg::EventGenerator) = process(eg.dcs)
 QEDbase.model(eg::EventGenerator) = model(eg.dcs)
-QEDbase.phase_space_definition(eg::EventGenerator) = phase_space_definition(eg.dcs)
+QEDbase.phase_space_layout(eg::EventGenerator) = phase_space_layout(eg.dcs)
 
 function generate_event(rng::AbstractRNG, eg::EventGenerator)
     rejected = true
@@ -20,7 +20,7 @@ function generate_event(rng::AbstractRNG, eg::EventGenerator)
     psp = PhaseSpacePoint(
         process(eg.dcs),
         model(eg.dcs),
-        phase_space_definition(eg.dcs),
+        phase_space_layout(eg.dcs),
         Tuple(rand(SFourMomentum, number_incoming_particles(process(eg.dcs)))),
         Tuple(rand(SFourMomentum, number_outgoing_particles(process(eg.dcs)))),
     )
@@ -35,7 +35,7 @@ function generate_event(rng::AbstractRNG, eg::EventGenerator)
         psp = PhaseSpacePoint(
             process(eg.dcs),
             model(eg.dcs),
-            phase_space_definition(eg.dcs),
+            phase_space_layout(eg.dcs),
             eg.dcs.in_coords,
             coords,
         )
@@ -61,7 +61,7 @@ function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_siz
         PhaseSpacePoint.(
             process(eg.proposal),
             model(eg.proposal),
-            phase_space_definition(eg.proposal),
+            phase_space_layout(eg.proposal),
             Ref(eg.dcs.in_coords),
             coords,
         )
@@ -94,7 +94,7 @@ function generate_events(
     psp_type = QEDevents._assemble_psp_type(
         process(eg.dcs),
         model(eg.dcs),
-        phase_space_definition(eg.dcs),
+        phase_space_layout(eg.dcs),
         SFourMomentum,
     )
     accepted_psps = psp_type[]

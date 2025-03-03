@@ -8,24 +8,17 @@ function _TS_omega_prime_elab(om, cth)
     return om / (1 + om * (1 - cth))
 end
 
-function _TS_init_electron_mom_elab(m)
-    return SFourMomentum(m, zero(m), zero(m), zero(m))
-end
-
-function _TS_init_photon_mom_zaligned(om)
-    return SFourMomentum(om, zero(om), zero(om), om)
-end
-
-function _TS_momenta_elab_sph(om, cth, phi)
-    P = _TS_init_electron_mom_elab(one(om))
-    K = _TS_init_photon_mom_zaligned(om)
+function _TS_momenta_elab_sph(in_moms, cth, phi)
+    P = @inbounds in_moms[1]
+    K = @inbounds in_moms[2]
+    om = getE(K)
     omp = _TS_omega_prime_elab(om, cth)
     sth = sqrt(1 - cth^2)
     sphi, cphi = sincos(phi)
     Kp = SFourMomentum(omp, omp * sth * cphi, omp * sth * sphi, omp * cth)
 
     Pp = P + K - Kp
-    return P, K, Pp, Kp
+    return Pp, Kp
 end
 
 # Phase Space Definitions
@@ -37,37 +30,34 @@ end
 Represents the ps system with init electron at rest and the out photon described in spherical coordiantes, i.e. polar and azimuthal angle.
 
 """
-struct ElabPhotonSphSystem <: AbstractPhasespaceDefinition end
-
-function QEDbase._generate_incoming_momenta(
-    proc::Thomson,
-    model::PerturbativeQED,
-    in_ps_def::ElabPhotonSphSystem,
-    in_ps::NTuple{1,T},
-) where {T<:Real}
-    om = @inbounds in_ps[1]
-
-    P = _TS_init_electron_mom_elab(one(om))
-    K = _TS_init_photon_mom_zaligned(om)
-
-    return (P, K)
+struct PhotonSphericalLayout{INPSL<:TwoBodyTargetSystem} <:
+       AbstractOutPhaseSpaceLayout{INPSL}
+    in_psl::INPSL
 end
 
-function QEDbase._generate_outgoing_momenta(
+QEDbase.in_phase_space_layout(psl::PhotonSphericalLayout) = psl.in_psl
+QEDbase.phase_space_dimension(
+    ::AbstractProcessDefinition,
+    ::AbstractModelDefinition,
+    ::PhotonSphericalLayout,
+) = 2
+
+
+function QEDbase._build_momenta(
     proc::Thomson,
     model::PerturbativeQED,
-    phase_space_def::ElabPhotonSphSystem,
-    in_phase_space::NTuple{1,T},
-    out_phase_space::NTuple{2,T},
+    in_moms::NTuple{2,<:AbstractFourMomentum},
+    ps_def::PhotonSphericalLayout,
+    out_coords::NTuple{2,T},
 ) where {T<:Real}
-    om = @inbounds in_phase_space[1]
-    cth = @inbounds out_phase_space[1]
-    phi = @inbounds out_phase_space[2]
-    moms = _TS_momenta_elab_sph(om, cth, phi)
-    return @inbounds (moms[3], moms[4])
+
+    cth = @inbounds out_coords[1]
+    phi = @inbounds out_coords[2]
+    moms = _TS_momenta_elab_sph(in_moms, cth, phi)
+    return moms
 end
 
-function _coordinate_boundaries(::Thomson, ::PerturbativeQED, ::ElabPhotonSphSystem)
+function _coordinate_boundaries(::Thomson, ::PerturbativeQED, ::PhotonSphericalLayout)
     return (-1.0, 0.0), (1.0, 2 * pi)
 end
 

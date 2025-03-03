@@ -93,7 +93,7 @@ struct VegasProposal{CS,T,G} <: AbstractProposalDistribution
         #rtol::T = 1e-4,
         #atol::T = 1e-4,
     ) where {T<:Real,DCS<:DifferentialCrossSectionCached}
-        lower, upper = _coordinate_boundaries(dcs.proc, dcs.model, dcs.ps_def)
+        lower, upper = _coordinate_boundaries(dcs.proc, dcs.model, dcs.psl)
         init_vg = _uniform_vegas_nodes(lower, upper, nbins)
         init_tot_cs, init_variance, init_chi_sq = _vp_init_values(T)
 
@@ -110,7 +110,7 @@ end
 
 QEDbase.process(d::VegasProposal) = d.dcs.proc
 QEDbase.model(d::VegasProposal) = d.dcs.model
-QEDbase.phase_space_definition(d::VegasProposal) = d.dcs.ps_def
+QEDbase.phase_space_layout(d::VegasProposal) = d.dcs.psl
 
 # TODO:
 # - implement the ProcessDistribution interface for VegasProposal

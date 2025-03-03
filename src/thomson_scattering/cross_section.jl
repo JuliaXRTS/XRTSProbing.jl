@@ -2,7 +2,7 @@
 # General Thomson scattering
 
 @inline function QEDbase._incident_flux(
-    psp::InPhaseSpacePoint{<:Thomson,PerturbativeQED,<:ElabPhotonSphSystem},
+    psp::InPhaseSpacePoint{<:Thomson,PerturbativeQED,<:PhotonSphericalLayout},
 )
     om = getE(momentum(psp, Incoming(), Photon()))
     return om
@@ -17,7 +17,7 @@ end
 end
 
 @inline function QEDbase._phase_space_factor(
-    psp::PhaseSpacePoint{<:Thomson,PerturbativeQED,<:ElabPhotonSphSystem},
+    psp::PhaseSpacePoint{<:Thomson,PerturbativeQED,<:PhotonSphericalLayout},
 )
     om = getE(momentum(psp, Incoming(), Photon()))
     return om / (16 * pi^2)
@@ -28,7 +28,7 @@ function QEDbase._matrix_element_square(
     psp::PhaseSpacePoint{
         Thomson{AllSpin,INPOL,AllSpin,OUTPOL},
         PerturbativeQED,
-        <:ElabPhotonSphSystem,
+        <:PhotonSphericalLayout,
     },
 ) where {INPOL<:AbstractDefinitePolarization,OUTPOL<:AbstractDefinitePolarization}
     in_photon_mom = momentum(psp, Incoming(), Photon())
@@ -48,7 +48,7 @@ end
 
 # unpolarized
 function QEDbase._matrix_element_square(
-    psp::PhaseSpacePoint{PROC,PerturbativeQED,<:ElabPhotonSphSystem},
+    psp::PhaseSpacePoint{PROC,PerturbativeQED,<:PhotonSphericalLayout},
 ) where {PROC<:Thomson{AllSpin,AllPol,AllSpin,AllPol}}
     cth = getCosTheta(momentum(psp, Outgoing(), Photon()))
     return 8 * ELEMENTARY_CHARGE_SQUARE^2 * (one(cth) + cth^2)
@@ -58,7 +58,7 @@ function QEDbase.unsafe_differential_cross_section(
     psp::PhaseSpacePoint{
         Thomson{AllSpin,AllPol,AllSpin,AllPol},
         PerturbativeQED,
-        <:ElabPhotonSphSystem,
+        <:PhotonSphericalLayout,
     },
 )
     k_prime = momentum(psp, Outgoing(), Photon())

@@ -14,7 +14,8 @@ RTOL = sqrt(eps())
 
 const PROC = Thomson(PolX(), PolX())
 const MODEL = PerturbativeQED()
-const PSDEF = ElabPhotonSphSystem()
+const INPSL = TwoBodyTargetSystem()
+const OUTPSL = PhotonSphericalLayout(INPSL)
 
 const NCALLS = 50000
 const MAXITER = 50
@@ -26,7 +27,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
 
 @testset "om: $om" for om in OMEGAS
     test_in_coords = (om,)
-    DCSCACHED = DifferentialCrossSectionCached(PROC, MODEL, PSDEF, test_in_coords)
+    DCSCACHED = DifferentialCrossSectionCached(PROC, MODEL, OUTPSL, test_in_coords)
 
 
     # build proposal

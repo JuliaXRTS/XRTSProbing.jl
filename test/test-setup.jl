@@ -19,7 +19,8 @@ const CTHS = (-1.0, 0.0, 1.0, rand(RNG), -rand(RNG))
 const PHIS = [0, 2 * pi, rand(RNG) * 2 * pi]
 
 const MODEL = PerturbativeQED()
-const PSDEF = ElabPhotonSphSystem()
+const INPSL = TwoBodyTargetSystem()
+const OUTPSL = PhotonSphericalLayout(INPSL)
 
 @testset "$INPOL, $OUTPOL" for (INPOL, OUTPOL) in (
     (AllPol(), AllPol()),
@@ -29,13 +30,13 @@ const PSDEF = ElabPhotonSphSystem()
 
     @testset "full input" begin
 
-        DIFFCS_SETUP = DifferentialCrossSection(PROC, MODEL, PSDEF)
+        DIFFCS_SETUP = DifferentialCrossSection(PROC, MODEL, OUTPSL)
 
         @testset "($om,$cth,$phi)" for (om, cth, phi) in
                                        Iterators.product(OMEGAS, CTHS, PHIS)
             in_ps = (om,)
             out_ps = (cth, phi)
-            psp = PhaseSpacePoint(PROC, MODEL, PSDEF, in_ps, out_ps)
+            psp = PhaseSpacePoint(PROC, MODEL, OUTPSL, in_ps, out_ps)
 
             groundtruth_diff_cs = differential_cross_section(psp)
 
@@ -50,9 +51,9 @@ const PSDEF = ElabPhotonSphSystem()
             in_ps = (om,)
             out_ps = (cth, phi)
 
-            DIFFCS_SETUP = DifferentialCrossSectionCached(PROC, MODEL, PSDEF, in_ps)
+            DIFFCS_SETUP = DifferentialCrossSectionCached(PROC, MODEL, OUTPSL, in_ps)
 
-            psp = PhaseSpacePoint(PROC, MODEL, PSDEF, in_ps, out_ps)
+            psp = PhaseSpacePoint(PROC, MODEL, OUTPSL, in_ps, out_ps)
 
             groundtruth_diff_cs = differential_cross_section(psp)
 

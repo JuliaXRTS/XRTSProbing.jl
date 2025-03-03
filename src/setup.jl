@@ -4,23 +4,23 @@ abstract type AbstractDifferentialCrossSection end
 struct DifferentialCrossSection{
     PROC<:AbstractProcessDefinition,
     MODEL<:AbstractModelDefinition,
-    PSDEF<:AbstractPhasespaceDefinition,
+    PSL<:AbstractOutPhaseSpaceLayout,
 } <: AbstractDifferentialCrossSection
     proc::PROC
     model::MODEL
-    ps_def::PSDEF
+    psl::PSL
 end
 
 QEDcore.process(d::DifferentialCrossSection) = d.proc
 QEDcore.model(d::DifferentialCrossSection) = d.model
-QEDcore.phase_space_definition(d::DifferentialCrossSection) = d.ps_def
+QEDcore.phase_space_layout(d::DifferentialCrossSection) = d.psl
 
 
 #ntuple(i->coords[i],2),ntuple(i->coords[2+i],3)
 
 
 function (diffCS::DifferentialCrossSection)(in_coords::Tuple, out_coords::Tuple)
-    psp = PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.ps_def, in_coords, out_coords)
+    psp = PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, in_coords, out_coords)
     return differential_cross_section(psp)
 end
 
@@ -33,29 +33,24 @@ end
 struct DifferentialCrossSectionCached{
     PROC<:AbstractProcessDefinition,
     MODEL<:AbstractModelDefinition,
-    PSDEF<:AbstractPhasespaceDefinition,
+    PSL<:AbstractOutPhaseSpaceLayout,
     COORDS<:Tuple,
 } <: AbstractDifferentialCrossSection
     proc::PROC
     model::MODEL
-    ps_def::PSDEF
+    psl::PSL
     in_coords::COORDS
 end
 Base.broadcastable(d::DifferentialCrossSectionCached) = Ref(d)
 
 QEDcore.process(d::DifferentialCrossSectionCached) = d.proc
 QEDcore.model(d::DifferentialCrossSectionCached) = d.model
-QEDcore.phase_space_definition(d::DifferentialCrossSectionCached) = d.ps_def
+QEDcore.phase_space_layout(d::DifferentialCrossSectionCached) = d.psl
 in_coordinates(d::DifferentialCrossSectionCached) = d.in_coords
 
 function (diffCS::DifferentialCrossSectionCached)(out_coords::Tuple)
-    psp = PhaseSpacePoint(
-        diffCS.proc,
-        diffCS.model,
-        diffCS.ps_def,
-        diffCS.in_coords,
-        out_coords,
-    )
+    psp =
+        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
     return differential_cross_section(psp)
 end
 function (diffCS::DifferentialCrossSectionCached{P,M,PS})(
@@ -73,24 +68,14 @@ end
     out_coords::Tuple,
     jac::Real,
 )
-    psp = PhaseSpacePoint(
-        diffCS.proc,
-        diffCS.model,
-        diffCS.ps_def,
-        diffCS.in_coords,
-        out_coords,
-    )
+    psp =
+        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
     return Event(psp, differential_cross_section(psp) * jac)
 end
 
 @inline function _build_event(diffCS::DifferentialCrossSectionCached, out_coords::Tuple)
-    psp = PhaseSpacePoint(
-        diffCS.proc,
-        diffCS.model,
-        diffCS.ps_def,
-        diffCS.in_coords,
-        out_coords,
-    )
+    psp =
+        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
     return Event(psp, differential_cross_section(psp))
 end
 

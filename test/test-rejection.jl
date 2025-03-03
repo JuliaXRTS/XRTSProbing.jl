@@ -15,7 +15,8 @@ RTOL = sqrt(eps())
 
 const PROC = Thomson(PolX(), PolX())
 const MODEL = PerturbativeQED()
-const PSDEF = ElabPhotonSphSystem()
+const INPSL = TwoBodyTargetSystem()
+const OUTPSL = PhotonSphericalLayout(INPSL)
 
 const NCALLS = 50000
 const MAXITER = 50
@@ -29,7 +30,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
 
 @testset "om: $om" for om in OMEGAS
     test_in_coords = (om,)
-    DCSCACHED = DifferentialCrossSectionCached(PROC, MODEL, PSDEF, test_in_coords)
+    DCSCACHED = DifferentialCrossSectionCached(PROC, MODEL, OUTPSL, test_in_coords)
 
 
     # build proposal
@@ -46,7 +47,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
     @testset "properties" begin
         @test process(EG) == PROC
         @test model(EG) == MODEL
-        @test phase_space_definition(EG) == PSDEF
+        @test phase_space_layout(EG) == OUTPSL
     end
 
     @testset "generation" begin
@@ -56,7 +57,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
 
             @test process(event.psp) == PROC
             @test model(event.psp) == MODEL
-            @test phase_space_definition(event.psp) == PSDEF
+            @test phase_space_layout(event.psp) == OUTPSL
 
             @test event.weight >= one(event.weight)
         end
@@ -69,7 +70,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
                 for event in event_list
                     @test process(event.psp) == PROC
                     @test model(event.psp) == MODEL
-                    @test phase_space_definition(event.psp) == PSDEF
+                    @test phase_space_layout(event.psp) == OUTPSL
 
                     @test event.weight >= one(event.weight)
                 end

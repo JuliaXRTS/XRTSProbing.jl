@@ -4,7 +4,7 @@ export PertQED
 export FlatPhaseSpaceSampler, randmom
 
 export Thomson
-export PhotonSphericalLayout
+export PhotonSphericalLayout, Elastic, InElastic, kinematic_mode, is_elastic
 
 # structure factor
 export temperature, betabar
@@ -12,6 +12,9 @@ export LindhardDRF
 
 
 export DifferentialCrossSection, DifferentialCrossSectionCached
+export cached_coords
+# remove if patch_QEDcore is resolved
+export coordinate_symbol, coordinate_symbols, coord_index
 
 export VegasGrid, VegasProposal
 export nbins, extent, nodes, spacing
@@ -32,6 +35,7 @@ using QEDevents
 using StaticArrays
 using LogExpFunctions
 using QuadGK
+using TupleTools
 
 function hello_world()
     return "Hello, World!"
@@ -39,9 +43,11 @@ end
 
 include("patch_QEDprocesses.jl")
 include("patch_QEDevents.jl")
+include("patch_QEDcore.jl")
 include("patch_QEDbase.jl")
 
 include("constants.jl")
+include("utils.jl")
 
 include("thomson_scattering/process.jl")
 include("thomson_scattering/kinematics.jl")

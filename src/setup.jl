@@ -1,29 +1,95 @@
-
 abstract type AbstractDifferentialCrossSection end
 
 struct DifferentialCrossSection{
     PROC<:AbstractProcessDefinition,
     MODEL<:AbstractModelDefinition,
     PSL<:AbstractOutPhaseSpaceLayout,
-} <: AbstractDifferentialCrossSection
+    CC,
+    L,
+} <: QEDprobing.AbstractDifferentialCrossSection
     proc::PROC
     model::MODEL
     psl::PSL
+    cached_coords::CC
+
+    function DifferentialCrossSection(
+        proc::PROC,
+        model::MODEL,
+        psl::PSL;
+        cached_coords...,
+    ) where {
+        PROC<:AbstractProcessDefinition,
+        MODEL<:AbstractModelDefinition,
+        PSL<:AbstractOutPhaseSpaceLayout,
+    }
+        L = length(cached_coords)
+        # TODO: check if keys(cached_coords) are in coord_syms
+        return new{PROC,MODEL,PSL,typeof(cached_coords),L}(proc, model, psl, cached_coords)
+    end
 end
 
-QEDcore.process(d::DifferentialCrossSection) = d.proc
-QEDcore.model(d::DifferentialCrossSection) = d.model
-QEDcore.phase_space_layout(d::DifferentialCrossSection) = d.psl
-
+QEDbase.process(d::DifferentialCrossSection) = d.proc
+QEDbase.model(d::DifferentialCrossSection) = d.model
+QEDbase.phase_space_layout(d::DifferentialCrossSection) = d.psl
+QEDbase.in_phase_space_layout(d::DifferentialCrossSection) = in_phase_space_layout(d.psl)
+cached_coords(d::DifferentialCrossSection) = d.cached_coords
 
 #ntuple(i->coords[i],2),ntuple(i->coords[2+i],3)
 
 
-function (diffCS::DifferentialCrossSection)(in_coords::Tuple, out_coords::Tuple)
+# TODO:
+# - input validation?
+# - this adds an overhead of ~40ns -> needs some optimization!
+function _compute_with_cached(diffCS::DifferentialCrossSection, remain_coords::Tuple)
+    ccoords = cached_coords(diffCS)
+    ccoord_syms = keys(ccoords)
+    coord_syms = coordinate_symbols(phase_space_layout(diffCS))
+    input = insert_by_name(coord_syms, remain_coords; ccoords...)
+
+    return _compute(diffCS, input)
+end
+
+# TODO: input validation?
+function _compute(diffCS::DifferentialCrossSection, coords::Tuple)
+    in_dim =
+        phase_space_dimension(process(diffCS), model(diffCS), in_phase_space_layout(diffCS))
+    out_dim =
+        phase_space_dimension(process(diffCS), model(diffCS), phase_space_layout(diffCS))
+    return _compute(
+        diffCS,
+        ntuple(i -> coords[i], in_dim),
+        ntuple(i -> coords[in_dim+i], out_dim),
+    )
+end
+
+# TODO: input validation?
+function _compute(diffCS::DifferentialCrossSection, in_coords::Tuple, out_coords::Tuple)
     psp = PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, in_coords, out_coords)
     return differential_cross_section(psp)
 end
 
+# TODO: input validation?
+function (diffCS::DifferentialCrossSection{P,M,PS,CC,N})(coords::Tuple) where {P,M,PS,CC,N}
+    if N == 0
+        return _compute(diffCS, coords)
+    else
+        return _compute_with_cached(diffCS, coords)
+    end
+end
+
+# TODO: input validation?
+function (diffCS::DifferentialCrossSection{P,M,PS,CC,N})(
+    in_coords::Tuple,
+    out_coords::Tuple,
+) where {P,M,PS,CC,N}
+    if N == 0
+        return _compute(diffCS, in_coords, out_coords)
+    else
+        return _compute_with_cached(diffCS, (in_coords..., out_coords...))
+    end
+end
+
+# TODO: input validation?
 function (diffCS::DifferentialCrossSection{P,M,PS})(
     psp::AbstractPhaseSpacePoint{P,M,PS},
 ) where {P,M,PS}

@@ -20,4 +20,4 @@ for (root, dirs, files) in walkdir(@__DIR__)
     end
 end
 
-#include("test-rejection.jl")
+#include("test-setup.jl")

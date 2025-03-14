@@ -12,6 +12,7 @@ end
     return inv(incoming_multiplicity(proc))
 end
 
+# TODO: consider putting on-shell check for inelastic scattering in here
 @inline function QEDbase._is_in_phasespace(psp::PhaseSpacePoint{<:Thomson,PerturbativeQED})
     return isapprox(sum(momenta(psp, Incoming())), sum(momenta(psp, Outgoing())))
 end

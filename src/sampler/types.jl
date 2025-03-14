@@ -52,11 +52,15 @@ end
 
 function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_size::Int)
 
+
+    # generation of rnd args
     rand_us = rand(rng, batch_size, ndims(eg.proposal))
     rand_probabilies = rand(rng, batch_size)
 
     # TODO: consider using `sample(rng,dcs,sampler)` returning the psp and the weight
     coords, jac = _build_coords(eg.proposal, rand_us)
+
+    # rnd args
     psps =
         PhaseSpacePoint.(
             process(eg.proposal),
@@ -65,13 +69,23 @@ function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_siz
             Ref(eg.dcs.in_coords),
             coords,
         )
+
+    # rng vals
     weights = @. eg.dcs(psps) * jac
 
+    # filter mask
     mask = _rejection_filter.(weights, rand_probabilies, eg.max_weight)
+
+    # arg selection
     accepted_psps = _select_accepted(mask, psps)
+
+    # value selection
     accepted_weights = _select_accepted(mask, weights)
+
+    # value update
     _update_residual_weight!(accepted_weights, eg.max_weight)
 
+    # return
     return accepted_psps, accepted_weights
 end
 

@@ -1,5 +1,9 @@
 module QEDprobing
 
+export XAxis, YAxis, ZAxis, AllAxis
+export GaussianPhotonDist, energy_mean, energy_width, k_vec_axis
+export DistributionBasedField, energy_spectrum
+
 export PertQED
 export FlatPhaseSpaceSampler, randmom
 
@@ -27,20 +31,24 @@ export EventGenerator
 export generate_event, generate_events
 
 
-using Random
 using QEDbase
 using QEDcore
 using QEDprocesses
 using QEDevents
+using QEDfields
+
+using Random
 using StaticArrays
 using LogExpFunctions
 using QuadGK
 using TupleTools
+using Distributions
 
 function hello_world()
     return "Hello, World!"
 end
 
+include("patch_QEDfields.jl")
 include("patch_QEDprocesses.jl")
 include("patch_QEDevents.jl")
 include("patch_QEDcore.jl")
@@ -48,6 +56,10 @@ include("patch_QEDbase.jl")
 
 include("constants.jl")
 include("utils.jl")
+
+include("fields/utils.jl")
+include("fields/photon_dists.jl")
+include("fields/types.jl")
 
 include("thomson_scattering/process.jl")
 include("thomson_scattering/kinematics.jl")

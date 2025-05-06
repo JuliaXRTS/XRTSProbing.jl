@@ -8,7 +8,7 @@ RNG = Xoshiro(137)
 
 include("utils.jl")
 
-const AXES = (XAxis(), YAxis(), ZAxis(), AllAxis())
+const AXES = (XAxis(), YAxis(), ZAxis(), UniformAxis())
 const OMEGA_MEANS = (
     1e-4 * rand(RNG),
     1e-3 * rand(RNG),
@@ -38,7 +38,7 @@ const OMEGA_WIDTHS = (
 
     @testset "default" begin
         DIST = GaussianPhotonDist(om, width)
-        @test DIST == GaussianPhotonDist(om, width, AllAxis())
+        @test DIST == GaussianPhotonDist(om, width, UniformAxis())
     end
 
     @testset "$axis" for axis in AXES
@@ -75,7 +75,7 @@ const OMEGA_WIDTHS = (
                     end
                 end
 
-            else # AllAxis case
+            else # UniformAxis case
                 # TODO: figure out, why this case has some precision problems.
                 @test _is_onshell_photon(rnd_mom)
             end

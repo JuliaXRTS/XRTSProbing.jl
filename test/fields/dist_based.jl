@@ -8,7 +8,7 @@ RNG = Xoshiro(137)
 
 include("utils.jl")
 
-const AXES = (XAxis(), YAxis(), ZAxis(), AllAxis())
+const AXES = (XAxis(), YAxis(), ZAxis(), UniformAxis())
 const OMEGA_MEANS = (
     1e-4 * rand(RNG),
     1e-3 * rand(RNG),

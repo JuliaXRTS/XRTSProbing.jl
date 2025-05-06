@@ -8,8 +8,8 @@
     return om
 end
 
-@inline function QEDbase._averaging_norm(proc::Thomson)
-    return inv(incoming_multiplicity(proc))
+@inline function QEDbase._averaging_norm(::Type{T}, proc::Thomson) where {T<:Real}
+    return inv(T(incoming_multiplicity(proc)))
 end
 
 # TODO: consider putting on-shell check for inelastic scattering in here

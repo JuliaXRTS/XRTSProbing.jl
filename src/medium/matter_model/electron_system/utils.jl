@@ -30,3 +30,19 @@ function _F(x, bbar)
     denom = exp(bbar * (x^2 - mubar)) + one(bbar)
     return x / denom
 end
+
+
+"""
+
+    _stable_log_term(x::Real)
+
+Stable version of
+
+```math
+\\log\\left(\\left\\vert\\frac{1+x}{1-x}\\right\\vert\\right)
+```
+
+"""
+function _stable_log_term(x::Real)
+    abs(x) < 1 ? 2 * atanh(x) : 2 * atanh(inv(x))
+end

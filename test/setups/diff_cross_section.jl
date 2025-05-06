@@ -1,5 +1,6 @@
-
-module SetupTest
+# TODO:
+# - refactor this using QEDbase.Mocks
+# - test accessors (especially degree_of_freedom)
 
 using Test
 using Random
@@ -133,5 +134,4 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
             @test isapprox(diff_cs, groundtruth_diff_cs, atol = ATOL, rtol = RTOL)
         end
     end
-end
 end

@@ -7,6 +7,7 @@
 
 # Phase Space Definitions
 
+# TODO: rename kinematic mode -> dispersion relation
 # kinematic modes
 abstract type AbstractKinematicMode end
 

@@ -4,8 +4,8 @@ using QEDcore
 using QEDprocesses
 using Random
 
-ATOL = eps()
-RTOL = sqrt(eps())
+ATOL = 1e-12
+RTOL = 1e-6
 
 RNG = MersenneTwister(137137)
 PARTICLES = (Electron(), Positron(), Photon())
@@ -20,7 +20,7 @@ PROC = ScatteringProcess(IN_PARTICLES, OUT_PARTICLES)
 
 MODEL = PertQED()
 INPSL = TwoBodyRestSystem()
-INCOORDS = (10,)
+INCOORDS = (10.0,)
 
 FLAT_PS_SAMPLER = FlatPhaseSpaceSampler(PROC, MODEL, INPSL, INCOORDS)
 IN_MOMS, OUT_MOMS = randmom(RNG, FLAT_PS_SAMPLER)

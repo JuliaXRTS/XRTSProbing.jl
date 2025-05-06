@@ -109,7 +109,7 @@ function generate_events(
         process(eg.dcs),
         model(eg.dcs),
         phase_space_layout(eg.dcs),
-        SFourMomentum,
+        SFourMomentum{Float64},
     )
     accepted_psps = psp_type[]
     sizehint!(accepted_weights, n + batch_size - 1)

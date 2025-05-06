@@ -134,7 +134,7 @@ end
                     test_diffCS_from_MES = prod((
                         inv(4 * QEDbase._incident_flux(psp)),
                         QEDbase._matrix_element_square(psp),
-                        QEDbase._averaging_norm(process(psp)),
+                        QEDbase._averaging_norm(Float64, process(psp)),
                         QEDbase._phase_space_factor(psp),
                     ))
                     @test isapprox(test_diffCS_from_MES, groundtruth)

@@ -1,4 +1,3 @@
-
 using QEDprobing
 using Random
 
@@ -25,7 +24,7 @@ NNODES = (2, 8)
             end
 
             @testset "on nodes" begin
-                for i = 1:nbins(test_vg)
+                for i in 1:nbins(test_vg)
                     u_on_node = (i - 1) / nbins(test_vg)
                     test_x = QEDprobing._vegas_map(test_vg, u_on_node)
 
@@ -46,7 +45,7 @@ NNODES = (2, 8)
             end
 
             @testset "on nodes" begin
-                for i = 1:nbins(test_vg)
+                for i in 1:nbins(test_vg)
                     u_on_node = fill((i - 1) / nbins(test_vg), 2)
                     test_x_vec = QEDprobing._vegas_map(test_vg, u_on_node)
 
@@ -74,16 +73,16 @@ end
             @testset "bounds" begin
                 test_u = rand(RNG, DIM)
                 test_x = QEDprobing._vegas_map(test_vg, test_u)
-                for d = 1:DIM
+                for d in 1:DIM
                     @test LOW[d] <= test_x[d] <= UP[d]
                 end
             end
 
             @testset "on nodes" begin
-                for i = 1:nbins(test_vg)
+                for i in 1:nbins(test_vg)
                     u_on_node = fill((i - 1) / nbins(test_vg), DIM)
                     test_x = QEDprobing._vegas_map(test_vg, u_on_node)
-                    @testset "dim: $d" for d = 1:DIM
+                    @testset "dim: $d" for d in 1:DIM
                         @test isapprox(test_x[d], nodes(test_vg, i, d))
                     end
                 end
@@ -96,7 +95,7 @@ end
             @testset "bounds" begin
                 test_u = rand(RNG, 2, DIM)
                 test_x = QEDprobing._vegas_map(test_vg, test_u)
-                for d = 1:DIM
+                for d in 1:DIM
                     for i in eachindex(test_x)
                         @test LOW[d] <= test_x[i][d] <= UP[d]
                     end
@@ -104,10 +103,10 @@ end
             end
 
             @testset "on nodes" begin
-                for i = 1:nbins(test_vg)
+                for i in 1:nbins(test_vg)
                     u_on_node = fill((i - 1) / nbins(test_vg), 2, DIM)
                     test_x = QEDprobing._vegas_map(test_vg, u_on_node)
-                    @testset "dim: $d" for d = 1:DIM
+                    @testset "dim: $d" for d in 1:DIM
                         for j in eachindex(test_x)
                             @test isapprox(test_x[j][d], nodes(test_vg, i, d))
                         end

@@ -15,7 +15,7 @@ RTOL = sqrt(eps())
 include("groundtruths/thomson_scattering.jl")
 
 
-const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * rand(RNG))
+const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e4 * rand(RNG))
 const CTHS = (-1.0, 0.0, 1.0, rand(RNG), -rand(RNG))
 const PHIS = [0, 2 * pi, rand(RNG) * 2 * pi]
 
@@ -40,9 +40,9 @@ const INPSL = TwoBodyTargetSystem()
 
     @testset "polarized" begin
         @testset "$INPOL, $OUTPOL" for (INPOL, OUTPOL) in (
-            (AllPol(), AllPol()),
-            Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
-        )
+                (AllPol(), AllPol()),
+                Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
+            )
             PROC = Thomson(INPOL, OUTPOL)
 
             @test incoming_particles(PROC) == (Electron(), Photon())
@@ -69,15 +69,15 @@ end
 
 @testset "kinmode: $kmode" for kmode in (Elastic(), InElastic())
     @testset "$INPOL, $OUTPOL" for (INPOL, OUTPOL) in (
-        (AllPol(), AllPol()),
-        Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
-    )
+            (AllPol(), AllPol()),
+            Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
+        )
 
         PROC = Thomson(INPOL, OUTPOL)
         OUTPSL = PhotonSphericalLayout(INPSL, kmode)
 
         @testset "($om,$cth,$phi)" for (om, cth, phi) in
-                                       Iterators.product(OMEGAS, CTHS, PHIS)
+            Iterators.product(OMEGAS, CTHS, PHIS)
             in_ps = (om,)
             out_ps = (cth, phi)
             psp = PhaseSpacePoint(PROC, MODEL, OUTPSL, in_ps, out_ps)
@@ -131,12 +131,14 @@ end
                 end
 
                 @testset "from mat_el squared" begin
-                    test_diffCS_from_MES = prod((
-                        inv(4 * QEDbase._incident_flux(psp)),
-                        QEDbase._matrix_element_square(psp),
-                        QEDbase._averaging_norm(Float64, process(psp)),
-                        QEDbase._phase_space_factor(psp),
-                    ))
+                    test_diffCS_from_MES = prod(
+                        (
+                            inv(4 * QEDbase._incident_flux(psp)),
+                            QEDbase._matrix_element_square(psp),
+                            QEDbase._averaging_norm(Float64, process(psp)),
+                            QEDbase._phase_space_factor(psp),
+                        )
+                    )
                     @test isapprox(test_diffCS_from_MES, groundtruth)
                 end
             end

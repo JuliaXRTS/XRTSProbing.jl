@@ -1,5 +1,3 @@
-
-
 using QEDprobing
 using QEDcore
 using QEDprocesses
@@ -33,7 +31,7 @@ max_weight = findmax(RNG, dcs, max_finder, vp)
 
 # sampling
 sampler = EventGenerator(fix_coord_dcs, vp, max_weight)
-N = 1e6
+N = 1.0e6
 
 events = generate_events(RNG, sampler, N)
 

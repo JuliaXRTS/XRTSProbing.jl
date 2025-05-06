@@ -35,7 +35,6 @@ max_weight = findmax(RNG, dcs, max_finder, vp)
 sampler1 = EventGenerator(fix_coord_dcs, vp, max_weight)
 
 
-
 # process 2: trident
 proc = Trident() # default: all spin and all pol
 mod = PerturbativeQED() # default: vacuum
@@ -65,7 +64,6 @@ max_weight = findmax(RNG, dcs, max_finder, vp)
 sampler2 = EventGenerator(fix_coord_dcs, vp, max_weight)
 
 
-
 ## Combined event generation
 # two step sampling
 # 1. binomial sample based on totCS: choose which process
@@ -73,7 +71,7 @@ sampler2 = EventGenerator(fix_coord_dcs, vp, max_weight)
 
 combined_sampler = CombinedEventGenerator(sampler1, sampler2)
 
-N = 1e6
+N = 1.0e6
 
 events = generate_events(RNG, combined_sampler, N)
 

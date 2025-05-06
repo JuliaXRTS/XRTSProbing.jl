@@ -10,32 +10,32 @@ include("utils.jl")
 
 const AXES = (XAxis(), YAxis(), ZAxis(), UniformAxis())
 const OMEGA_MEANS = (
-    1e-4 * rand(RNG),
-    1e-3 * rand(RNG),
-    1e-2 * rand(RNG),
-    1e-1 * rand(RNG),
+    1.0e-4 * rand(RNG),
+    1.0e-3 * rand(RNG),
+    1.0e-2 * rand(RNG),
+    1.0e-1 * rand(RNG),
     rand(RNG),
-    1e2 * rand(RNG),
+    1.0e2 * rand(RNG),
     rand(RNG),
-    1e3 * rand(RNG),
-    1e4 * rand(RNG),
+    1.0e3 * rand(RNG),
+    1.0e4 * rand(RNG),
 )
 const OMEGA_WIDTHS = (
     0.0,
-    1e-2 * rand(RNG),
-    1e-3 * rand(RNG),
-    1e-4 * rand(RNG),
-    1e-1 * rand(RNG),
+    1.0e-2 * rand(RNG),
+    1.0e-3 * rand(RNG),
+    1.0e-4 * rand(RNG),
+    1.0e-1 * rand(RNG),
     rand(RNG),
-    1e2 * rand(RNG),
+    1.0e2 * rand(RNG),
     rand(RNG),
-    1e3 * rand(RNG),
-    1e4 * rand(RNG),
+    1.0e3 * rand(RNG),
+    1.0e4 * rand(RNG),
 )
 
 @testset "$axis" for axis in AXES
     @testset "om: $om, width: $width" for (om, width) in
-                                          Iterators.product(OMEGA_MEANS, OMEGA_WIDTHS)
+        Iterators.product(OMEGA_MEANS, OMEGA_WIDTHS)
         photon_dist = GaussianPhotonDist(om, width, axis)
 
         photon_field = DistributionBasedField(photon_dist)

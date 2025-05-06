@@ -1,4 +1,3 @@
-
 function _nu_minus(ombar, qbar)
     return (ombar - qbar^2) / (2 * qbar)
 end
@@ -8,7 +7,7 @@ function _nu_plus(ombar, qbar)
 end
 
 function heaviside(t)
-    0.5 * (sign(t) + 1)
+    return 0.5 * (sign(t) + 1)
 end
 
 # Ichimaru:2018
@@ -44,5 +43,5 @@ Stable version of
 
 """
 function _stable_log_term(x::Real)
-    abs(x) < 1 ? 2 * atanh(x) : 2 * atanh(inv(x))
+    return abs(x) < 1 ? 2 * atanh(x) : 2 * atanh(inv(x))
 end

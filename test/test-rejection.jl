@@ -1,4 +1,3 @@
-
 module RejectionTest
 
 using Test
@@ -20,12 +19,12 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
 
 const NCALLS = 50000
 const MAXITER = 50
-const MAXFINDER = QuantileReductionMethod(0.001, Int(1e6))
+const MAXFINDER = QuantileReductionMethod(0.001, Int(1.0e6))
 
 const NEVENTS = (1, rand(RNG, 2:10), rand(RNG, 11:20))
 const BATCHSIZE = (1, rand(RNG, 2:10), rand(RNG, 11:20))
 
-const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * rand(RNG))
+const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e4 * rand(RNG))
 
 
 @testset "om: $om" for om in OMEGAS
@@ -78,9 +77,7 @@ const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * ra
         end
 
 
-
     end
-
 
 
 end

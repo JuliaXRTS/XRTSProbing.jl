@@ -1,4 +1,3 @@
-
 using Test
 using Random
 using Unitful
@@ -21,29 +20,31 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
 const DCS = DifferentialCrossSection(PROC, MODEL, OUTPSL)
 
 # FIELD
-const OMX = 2e-2 # == 10keV
-const OMX_STD = 1e-3 # == 0.5 keV
+const OMX = 2.0e-2 # == 10keV
+const OMX_STD = 1.0e-3 # == 0.5 keV
 const PHOTONAXIS = ZAxis()
 const PHOTONDIST = GaussianPhotonDist(OMX, OMX_STD, PHOTONAXIS)
 const FIELD = DistributionBasedField(PHOTONDIST)
 
 # MEDIUM
-const NE = 1e21u"cm^(-3)"
+const NE = 1.0e21u"cm^(-3)"
 const MATTERMODEL = IdealElectronSystem{ZeroTemperature}(NE)
 const SCREENING = Screening()
 const MEDIUM = InteractingElectronSystem(MATTERMODEL, SCREENING)
 
 # CUTS
-LOW_OM, UP_OM = 1e-2 - 5e-3, 1e-2 + 5e-3
-const CUTS = KinematicCuts((
-    LOW_OM, # min omx
-    -1.0, # min cos theta
-    0.0, # min phi
-), (
-    UP_OM, # max omx
-    1.0, # max cos theta
-    2 * pi, # max phi
-))
+LOW_OM, UP_OM = 1.0e-2 - 5.0e-3, 1.0e-2 + 5.0e-3
+const CUTS = KinematicCuts(
+    (
+        LOW_OM, # min omx
+        -1.0, # min cos theta
+        0.0, # min phi
+    ), (
+        UP_OM, # max omx
+        1.0, # max cos theta
+        2 * pi, # max phi
+    )
+)
 
 TEST_PROBING_SETUP = ProbingSetup(DCS, FIELD, MEDIUM, CUTS)
 
@@ -90,7 +91,7 @@ end
             )
 
             @test QEDprobing._compute(TEST_PROBING_SETUP, (om + UP_OM, cth, phi)) ==
-                  zero(om)
+                zero(om)
         end
     end
 

@@ -23,6 +23,7 @@ restore this, if the package is moved to github
 [![coverage report](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/badges/main/coverage.svg)](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/commits/main)
 [![Latest Release](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/badges/release.svg)](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/releases)
 [![BestieTemplate](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JuliaBesties/BestieTemplate.jl/main/docs/src/assets/badge.json)](https://github.com/JuliaBesties/BestieTemplate.jl)
+[![code style: runic](https://img.shields.io/badge/code_style-%E1%9A%B1%E1%9A%A2%E1%9A%BE%E1%9B%81%E1%9A%B2-black)](https://github.com/fredrikekre/Runic.jl)
 
 `QEDprobing.jl` is an experimental implementation of the interaction of photons or laser
 fields with a cloud of distributed electrons. The code will change rapidly without proper

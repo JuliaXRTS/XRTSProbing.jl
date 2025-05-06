@@ -1,5 +1,3 @@
-
-
 @inline nbins(vg::VegasGrid) = size(vg.nodes, 1) - 1
 @inline Base.ndims(vg::VegasGrid{N}) where {N} = N
 @inline nodes(vg::VegasGrid, idx, d) = vg.nodes[idx, d]

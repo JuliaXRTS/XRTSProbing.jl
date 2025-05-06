@@ -43,10 +43,10 @@ function mynatural(q; base = u"eV")
 end
 
 # opt out, if the quanity is already in eV
-gettypeparams(::Unitful.FreeUnits{T,U,V}) where {T,U,V} = T, U, V
+gettypeparams(::Unitful.FreeUnits{T, U, V}) where {T, U, V} = T, U, V
 const eV_DIM = gettypeparams(u"GeV")[2]
 
-function mynatural(q::Quantity{T,eV_DIM}; base = u"eV") where {T<:Number}
+function mynatural(q::Quantity{T, eV_DIM}; base = u"eV") where {T <: Number}
     return uconvert(base, q)
 end
 

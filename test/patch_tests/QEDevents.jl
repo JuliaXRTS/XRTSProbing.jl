@@ -1,11 +1,10 @@
-
 using QEDprobing
 using QEDcore
 using QEDprocesses
 using Random
 
-ATOL = 1e-12
-RTOL = 1e-6
+ATOL = 1.0e-12
+RTOL = 1.0e-6
 
 RNG = MersenneTwister(137137)
 PARTICLES = (Electron(), Positron(), Photon())

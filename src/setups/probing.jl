@@ -1,22 +1,22 @@
-struct ProbingSetup{T,DOF,D,F,M,C} <: AbstractProcessSetup
+struct ProbingSetup{T, DOF, D, F, M, C} <: AbstractProcessSetup
     dcs::D
     field::F
     medium::M
     kin_cuts::C
 
     function ProbingSetup(
-        dcs::D,
-        field::F,
-        medium::M,
-        cuts::C,
-    ) where {
-        N,
-        T<:Real,
-        D<:DifferentialCrossSection,
-        F<:QEDprobing.AbstractSpectrumBasedField,
-        M<:AbstractMatterModel, # consider updating to abstract medium?!
-        C<:AbstractKinematicCuts{N,T},
-    }
+            dcs::D,
+            field::F,
+            medium::M,
+            cuts::C,
+        ) where {
+            N,
+            T <: Real,
+            D <: DifferentialCrossSection,
+            F <: QEDprobing.AbstractSpectrumBasedField,
+            M <: AbstractMatterModel, # consider updating to abstract medium?!
+            C <: AbstractKinematicCuts{N, T},
+        }
 
         degree_of_freedom(cuts) == degree_of_freedom(dcs) || throw(
             ArgumentError(
@@ -24,7 +24,7 @@ struct ProbingSetup{T,DOF,D,F,M,C} <: AbstractProcessSetup
             ),
         )
 
-        return new{T,N,D,F,M,C}(dcs, field, medium, cuts)
+        return new{T, N, D, F, M, C}(dcs, field, medium, cuts)
     end
 end
 
@@ -44,7 +44,7 @@ end
 @inline QEDprobing.cached_coords(stp::ProbingSetup) =
     cached_coords(differential_cross_section_setup(stp))
 
-degree_of_freedom(stp::ProbingSetup{T,N}) where {T,N} = N
+degree_of_freedom(stp::ProbingSetup{T, N}) where {T, N} = N
 
 
 # compute
@@ -62,7 +62,7 @@ function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
     return in_dist * dsf * hard_dcs
 end
 
-function _compute(stp::ProbingSetup{T,N}, coords::NTuple{N,T}) where {T<:Real,N}
+function _compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
     all_within_cuts(kinematic_cuts(stp), coords) || return zero(T)
 
 

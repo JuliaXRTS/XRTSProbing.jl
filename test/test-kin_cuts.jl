@@ -1,4 +1,3 @@
-
 module KinCutsTests
 
 using Test
@@ -56,8 +55,8 @@ DOFs = [1, rand(RNG, 2:10)]
         @test_throws ArgumentError KinematicCuts(up, low)
 
         # exchange one last bounds
-        low_one_invalid = (low[1:end-1]..., up[end])
-        up_one_invalid = (up[1:end-1]..., low[end])
+        low_one_invalid = (low[1:(end - 1)]..., up[end])
+        up_one_invalid = (up[1:(end - 1)]..., low[end])
         @test_throws ArgumentError KinematicCuts(low_one_invalid, up_one_invalid)
 
     end

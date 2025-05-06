@@ -1,4 +1,3 @@
-
 struct NaiveMaxFinder <: AbstractSampleBasedMaxFinder
     nsamples::Int
 end

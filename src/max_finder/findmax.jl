@@ -1,10 +1,9 @@
-
 function Base.findmax(
-    rng::AbstractRNG,
-    dcs::DifferentialCrossSectionCached,
-    method::AbstractSampleBasedMaxFinder,
-    sampler::ScatteringProcessDistribution,
-)
+        rng::AbstractRNG,
+        dcs::DifferentialCrossSectionCached,
+        method::AbstractSampleBasedMaxFinder,
+        sampler::ScatteringProcessDistribution,
+    )
 
     # - build samples (momenta)
     # - build psps

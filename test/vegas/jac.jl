@@ -16,7 +16,7 @@ NNODES = (2, 8)
         test_vg = VegasGrid(test_grid)
 
         @testset "single" begin
-            for i = 1:nbins(test_vg)
+            for i in 1:nbins(test_vg)
                 u_on_node = (i - 1) / nbins(test_vg)
                 test_jac = QEDprobing._jac_vegas_map(test_vg, u_on_node)
 
@@ -25,7 +25,7 @@ NNODES = (2, 8)
         end
 
         @testset "multiple" begin
-            for i = 1:nbins(test_vg)
+            for i in 1:nbins(test_vg)
                 u_on_node = fill((i - 1) / nbins(test_vg), 2)
                 test_jac_vec = QEDprobing._jac_vegas_map(test_vg, u_on_node)
 
@@ -36,11 +36,13 @@ NNODES = (2, 8)
         end
 
         @testset "sum rule" begin
-            test_sum = sum([
-                spacing(test_vg, i) /
-                QEDprobing._jac_vegas_map(test_vg, (i - 1) / nbins(test_vg)) for
-                i = 1:nbins(test_vg)
-            ])
+            test_sum = sum(
+                [
+                    spacing(test_vg, i) /
+                        QEDprobing._jac_vegas_map(test_vg, (i - 1) / nbins(test_vg)) for
+                        i in 1:nbins(test_vg)
+                ]
+            )
             @test isapprox(test_sum, one(test_sum))
         end
     end
@@ -55,22 +57,22 @@ end
         test_vg = VegasGrid(test_grid)
 
         @testset "single" begin
-            for i = 1:nbins(test_vg)
+            for i in 1:nbins(test_vg)
                 u_on_node = fill((i - 1) / nbins(test_vg), DIM)
                 test_jac = QEDprobing._jac_vegas_map(test_vg, u_on_node)
                 groundtruth_jac =
-                    prod(nbins(test_vg) * spacing(test_vg, i, d) for d = 1:DIM)
+                    prod(nbins(test_vg) * spacing(test_vg, i, d) for d in 1:DIM)
 
                 @test isapprox(test_jac, groundtruth_jac)
             end
         end
 
         @testset "multiple" begin
-            for i = 1:nbins(test_vg)
+            for i in 1:nbins(test_vg)
                 u_on_node = fill((i - 1) / nbins(test_vg), 2, DIM)
                 test_jac_vec = QEDprobing._jac_vegas_map(test_vg, u_on_node)
                 groundtruth_jac =
-                    prod(nbins(test_vg) * spacing(test_vg, i, d) for d = 1:DIM)
+                    prod(nbins(test_vg) * spacing(test_vg, i, d) for d in 1:DIM)
 
                 for j in eachindex(test_jac_vec)
                     @test isapprox(test_jac_vec[j], groundtruth_jac)
@@ -81,13 +83,15 @@ end
         @testset "sum rule" begin
             test_jac_on_nodes = QEDprobing._jac_vegas_map(
                 test_vg,
-                stack(fill((0:(nbins(test_vg)-1)) / nbins(test_vg), DIM)),
+                stack(fill((0:(nbins(test_vg) - 1)) / nbins(test_vg), DIM)),
             )
 
-            test_sum = sum([
-                prod(spacing(test_vg, i, d) for d = 1:DIM) / test_jac_on_nodes[i] for
-                i = 1:nbins(test_vg)
-            ])
+            test_sum = sum(
+                [
+                    prod(spacing(test_vg, i, d) for d in 1:DIM) / test_jac_on_nodes[i] for
+                        i in 1:nbins(test_vg)
+                ]
+            )
             @test isapprox(test_sum, inv(nbins(test_vg)^(DIM - 1)))
         end
 

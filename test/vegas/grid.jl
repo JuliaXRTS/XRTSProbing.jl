@@ -33,19 +33,19 @@ NNODES = (2, 8)
                 @test nodes(test_vg, idx) == _scalarize(test_grid[idx, :])
 
                 if DIM != 1
-                    for d = 1:DIM
+                    for d in 1:DIM
                         @test nodes(test_vg, idx, d) == test_grid[idx, d]
                     end
                 end
             end
 
             @testset "indexing: spacing" begin
-                idx = rand(RNG, 1:N-1)
-                groundtruth_spacing = _scalarize(test_grid[idx+1, :] .- test_grid[idx, :])
+                idx = rand(RNG, 1:(N - 1))
+                groundtruth_spacing = _scalarize(test_grid[idx + 1, :] .- test_grid[idx, :])
                 test_spacing = spacing(test_vg, idx)
 
                 if DIM != 1
-                    for d = 1:DIM
+                    for d in 1:DIM
                         @test isapprox(test_spacing[d], groundtruth_spacing[d])
                         @test isapprox(spacing(test_vg, idx, d), groundtruth_spacing[d])
                     end
@@ -62,7 +62,7 @@ NNODES = (2, 8)
 
             diffs = diff(test_vg.nodes, dims = 1)
 
-            for d = 1:DIM
+            for d in 1:DIM
                 @test _all_approx(diffs[:, d])
             end
 

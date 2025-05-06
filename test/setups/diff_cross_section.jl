@@ -15,12 +15,12 @@ ATOL = sqrt(eps())
 RTOL = sqrt(eps())
 
 
-function _get_all_except(t::NTuple{N,T}, exc::T) where {N,T}
+function _get_all_except(t::NTuple{N, T}, exc::T) where {N, T}
     t_a = [t...]
-    return Tuple(t_a[t_a.!=exc])
+    return Tuple(t_a[t_a .!= exc])
 end
 
-const OMEGAS = (rand(RNG), 1e2 * rand(RNG), rand(RNG), 1e3 * rand(RNG), 1e4 * rand(RNG))
+const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e4 * rand(RNG))
 const CTHS = (-1.0, 0.0, 1.0, rand(RNG), -rand(RNG))
 const PHIS = (0.0, 2 * pi, rand(RNG) * 2 * pi)
 const COORD_SYMS = (:energy_2, :cos_theta, :phi)
@@ -31,9 +31,9 @@ const INPSL = TwoBodyTargetSystem()
 const OUTPSL = PhotonSphericalLayout(INPSL)
 
 @testset "$INPOL, $OUTPOL" for (INPOL, OUTPOL) in (
-    (AllPol(), AllPol()),
-    Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
-)
+        (AllPol(), AllPol()),
+        Iterators.product((PolX(), PolY()), (PolX(), PolY()))...,
+    )
     PROC = Thomson(INPOL, OUTPOL)
 
     DIFFCS_SETUP = DifferentialCrossSection(PROC, MODEL, OUTPSL)
@@ -41,7 +41,7 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
 
 
         @testset "($om,$cth,$phi)" for (om, cth, phi) in
-                                       Iterators.product(OMEGAS, CTHS, PHIS)
+            Iterators.product(OMEGAS, CTHS, PHIS)
             in_ps = (om,)
             out_ps = (cth, phi)
             all_ps = (om, cth, phi)
@@ -64,10 +64,10 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
             @testset "$sym" for (i, sym) in enumerate(COORD_SYMS)
 
                 @testset "($om,$cth,$phi)" for (om, cth, phi) in
-                                               Iterators.product(OMEGAS, CTHS, PHIS)
+                    Iterators.product(OMEGAS, CTHS, PHIS)
                     test_coords = [om, cth, phi]
                     test_cached_coord = test_coords[i]
-                    test_rem_coords = Tuple(test_coords[1:end.!=i])
+                    test_rem_coords = Tuple(test_coords[1:end .!= i])
 
                     test_diff_cs_setup = DifferentialCrossSection(
                         PROC,
@@ -88,16 +88,16 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
                     if sym1 != sym2
                         @testset "$sym1 $sym2" begin
                             @testset "($om,$cth,$phi)" for (om, cth, phi) in
-                                                           Iterators.product(
-                                OMEGAS,
-                                CTHS,
-                                PHIS,
-                            )
+                                Iterators.product(
+                                    OMEGAS,
+                                    CTHS,
+                                    PHIS,
+                                )
                                 test_coords = [om, cth, phi]
                                 test_cached_coord =
                                     (; sym1 => test_coords[i1], sym2 => test_coords[i2])
                                 test_rem_coords =
-                                    Tuple(test_coords[(1:end.!=i1).&&(1:end.!=i2)])
+                                    Tuple(test_coords[(1:end .!= i1).&&(1:end .!= i2)])
 
                                 test_diff_cs_setup = DifferentialCrossSection(
                                     PROC,
@@ -119,7 +119,7 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
 
     @testset "cached input" begin
         @testset "($om,$cth,$phi)" for (om, cth, phi) in
-                                       Iterators.product(OMEGAS, CTHS, PHIS)
+            Iterators.product(OMEGAS, CTHS, PHIS)
             in_ps = (om,)
             out_ps = (cth, phi)
 

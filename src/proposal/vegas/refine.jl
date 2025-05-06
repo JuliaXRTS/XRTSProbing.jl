@@ -5,11 +5,11 @@
 # effective bin average value of J x F ^2
 
 function _eff_bin_avg!(
-    vg::VegasGrid{1},
-    dest::AbstractVector,
-    yvec::AbstractVector,
-    fxj2::AbstractVector,
-)
+        vg::VegasGrid{1},
+        dest::AbstractVector,
+        yvec::AbstractVector,
+        fxj2::AbstractVector,
+    )
 
     Ng = nbins(vg)
     Neval = length(yvec)
@@ -29,11 +29,11 @@ function _eff_bin_avg(vg::VegasGrid{1}, yvec::AbstractVector, fxj2::AbstractVect
 end
 
 function _eff_bin_avg!(
-    vg::VegasGrid{N},
-    dest::AbstractMatrix,
-    ymat::AbstractMatrix,
-    fxj2::AbstractVector,
-) where {N}
+        vg::VegasGrid{N},
+        dest::AbstractMatrix,
+        ymat::AbstractMatrix,
+        fxj2::AbstractVector,
+    ) where {N}
     Ng = nbins(vg)
     Neval = size(ymat, 1)
     ni_avg = Neval / Ng
@@ -46,10 +46,10 @@ function _eff_bin_avg!(
 end
 
 function _eff_bin_avg(
-    vg::VegasGrid{N},
-    ymat::AbstractMatrix,
-    fxj2::AbstractVector,
-) where {N}
+        vg::VegasGrid{N},
+        ymat::AbstractMatrix,
+        fxj2::AbstractVector,
+    ) where {N}
     return _eff_bin_avg!(vg, zeros(nbins(vg), ndims(vg)), ymat, fxj2)
 end
 
@@ -61,10 +61,10 @@ function _smooth_bin_avg(d::AbstractVector)
     res_d = similar(d)
 
     res_d[1] = (7 * d[1] + d[2]) / (8 * s)
-    res_d[end] = (d[end-1] + 7 * d[end]) / (8 * s)
+    res_d[end] = (d[end - 1] + 7 * d[end]) / (8 * s)
 
-    for i = 2:Ng-1
-        res_d[i] = (d[i-1] + 6 * d[i] + d[i+1]) / (8 * s)
+    for i in 2:(Ng - 1)
+        res_d[i] = (d[i - 1] + 6 * d[i] + d[i + 1]) / (8 * s)
     end
 
     return res_d
@@ -75,13 +75,13 @@ function _smooth_bin_avg(d::AbstractMatrix)
     Ng, D = size(d)
     res_d = similar(d)
 
-    for j = 1:D
+    for j in 1:D
 
         res_d[1, j] = (7 * d[1, j] + d[2, j]) / (8 * s[j])
-        res_d[end, j] = (d[end-1, j] + 7 * d[end, j]) / (8 * s[j])
+        res_d[end, j] = (d[end - 1, j] + 7 * d[end, j]) / (8 * s[j])
 
-        for i = 2:Ng-1
-            res_d[i, j] = (d[i-1, j] + 6 * d[i, j] + d[i+1, j]) / (8 * s[j])
+        for i in 2:(Ng - 1)
+            res_d[i, j] = (d[i - 1, j] + 6 * d[i, j] + d[i + 1, j]) / (8 * s[j])
         end
     end
 
@@ -108,41 +108,41 @@ end
 
 # refinement of the grid based on bin average
 
-function _refine_nodes!(vg::VegasGrid{1}, bin_avg::AbstractVector{T}) where {T<:Real}
+function _refine_nodes!(vg::VegasGrid{1}, bin_avg::AbstractVector{T}) where {T <: Real}
     Ng = nbins(vg)
     new_grid = copy(vg.nodes)
     j = 1
     s = zero(T)
     delta = sum(bin_avg) / Ng
-    for i = 2:Ng
+    for i in 2:Ng
         while s < delta
             s += bin_avg[j]
             j += 1
         end
         s -= delta
-        new_grid[i] = nodes(vg, j) - s / bin_avg[j-1] * spacing(vg, j - 1)
+        new_grid[i] = nodes(vg, j) - s / bin_avg[j - 1] * spacing(vg, j - 1)
     end
     vg.nodes[:] .= new_grid[:]
     return vg
 end
 
-function _refine_nodes!(vg::VegasGrid{N}, bin_avg::AbstractMatrix{T}) where {N,T<:Real}
+function _refine_nodes!(vg::VegasGrid{N}, bin_avg::AbstractMatrix{T}) where {N, T <: Real}
     Ng = nbins(vg)
     delta = sum(bin_avg, dims = 1) ./ Ng
     new_grid = copy(vg.nodes)
     # iterate over ndimss
-    for d = 1:N
+    for d in 1:N
         j = 1
         s = zero(T)
         # iterate over bins
-        for i = 2:Ng
+        for i in 2:Ng
 
             while s < delta[d]
                 s += bin_avg[j, d]
                 j += 1
             end
             s -= delta[d]
-            new_grid[i, d] = nodes(vg, j, d) - s / bin_avg[j-1, d] * spacing(vg, j - 1, d)
+            new_grid[i, d] = nodes(vg, j, d) - s / bin_avg[j - 1, d] * spacing(vg, j - 1, d)
         end
     end
     vg.nodes[:] .= new_grid[:]

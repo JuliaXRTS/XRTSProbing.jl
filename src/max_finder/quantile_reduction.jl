@@ -1,5 +1,3 @@
-
-
 struct QuantileReductionMethod <: AbstractSampleBasedMaxFinder
     p::Float64
     nsamples::Int
@@ -17,4 +15,5 @@ function _findmax(method::QuantileReductionMethod, weights::AbstractVector)
             return weight
         end
     end
+    return
 end

@@ -7,16 +7,16 @@ using QEDprobing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
-RTOL = 1e-6
+RTOL = 1.0e-6
 
-NE = rand(RNG) * 1e21u"cm^(-3)"
+NE = rand(RNG) * 1.0e21u"cm^(-3)"
 #NE = 1e21u"cm^(-3)"
 NE_internal = QEDprobing._internalize_density(NE)
 KF = QEDprobing._fermi_wave_vector(NE_internal)
 EF = QEDprobing._fermi_energy_from_kF(KF)
 
 OMS = EF .* (0.0, rand(RNG), 1 + rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
-QS = KF .* (1e-2 * rand(RNG), rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
+QS = KF .* (1.0e-2 * rand(RNG), rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
 TEMPS_eV = (rand(RNG), rand(RNG) * 10, rand(RNG) * 100) .* 1u"eV"
 TEMPS = QEDprobing._internalize_temperature.(TEMPS_eV)
 
@@ -38,14 +38,14 @@ SCREENINGS = (Screening(), NoScreening())
 
         @testset "matching" begin
             test_system_small_finT =
-                InteractingElectronSystem(IdealElectronSystem(NE, 1e-2 * eps()), scr)
+                InteractingElectronSystem(IdealElectronSystem(NE, 1.0e-2 * eps()), scr)
 
             @testset "om: $om, q: $q" for (om, q) in Iterators.product(OMS, QS)
                 @test isapprox(
                     imag_dynamic_response(test_system_zeroT, (om, q)),
                     imag_dynamic_response(test_system_small_finT, (om, q)),
-                    rtol = 1e-2,
-                    atol = 1e-6,
+                    rtol = 1.0e-2,
+                    atol = 1.0e-6,
                 )
             end
         end
@@ -183,8 +183,8 @@ SCREENINGS = (Screening(), NoScreening())
                         @test isapprox(
                             dynamic_structure_factor(test_system, input_neg_om),
                             exp(-om * beta(test_system)) *
-                            dynamic_structure_factor(test_system, input_pos_om),
-                            rtol = 1e-4,
+                                dynamic_structure_factor(test_system, input_pos_om),
+                            rtol = 1.0e-4,
                         )
                     end
                 end

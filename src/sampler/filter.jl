@@ -3,10 +3,10 @@
 end
 
 @inline function _rejection_filter(
-    trail_weights::AbstractVector,
-    probs::AbstractVector,
-    w_max::Real,
-)
+        trail_weights::AbstractVector,
+        probs::AbstractVector,
+        w_max::Real,
+    )
     # TODO: avoid such functions -> not idiomatic Julia
     return _rejection_filter.(trail_weights, probs, w_max)
 end

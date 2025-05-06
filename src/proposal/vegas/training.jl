@@ -1,9 +1,9 @@
 function train_iter!(
-    rng::AbstractRNG,
-    vp::VegasProposal,
-    ncalls::Int = 10000,
-    # other training parameters
-)
+        rng::AbstractRNG,
+        vp::VegasProposal,
+        ncalls::Int = 10000,
+        # other training parameters
+    )
     vg = vp.vgrid
 
     # generate uniform distributed y
@@ -59,7 +59,7 @@ end
 # - enhance this with some training analysis (e.g. enable short-cut if training was
 # sufficient before reaching niter)
 function train!(rng, vp::VegasProposal, niter, ncalls)
-    for _ = 1:niter
+    for _ in 1:niter
         train_iter!(rng, vp, ncalls)
     end
     return nothing

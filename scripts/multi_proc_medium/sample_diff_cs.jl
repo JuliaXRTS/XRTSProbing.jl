@@ -7,7 +7,7 @@ using Uniful
 proc = Thomson() # default: all spin and all pol
 
 T = 10u"eV"
-n_e = 1e21u"cm^3"
+n_e = 1.0e21u"cm^3"
 
 # gaussian distributed energy of the second particle with mean 10.0 and std 1.0
 in_psl = TwoBodyRestSystem(Gaussian(Energy(2), 10.0, 1.0))
@@ -63,12 +63,11 @@ max_weight = findmax(RNG, dcs, max_finder, vp)
 sampler_elastic = EventGenerator(fix_coord_dcs, vp, max_weight)
 
 
-
 ## combined event generation
 
 combined_sampler = CombinedEventGenerator(sampler_inel, sampler_elastic)
 
-N = 1e6
+N = 1.0e6
 
 events = generate_events(RNG, combined_sampler, N)
 

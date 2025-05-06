@@ -1,4 +1,3 @@
-
 """
 
     AbstractAxis
@@ -39,8 +38,8 @@ Optionally, one may implement the following function to overwrite the generic im
 * `QEDevents._randmom(rng::AbstractRNG,dist::AbstractPhotonEnergyDistribution)`: return a randomly distributed four-momentum according to `dist`
 
 """
-abstract type AbstractPhotonEnergyDistribution{A<:AbstractAxis} <:
-              SingleParticleDistribution end
+abstract type AbstractPhotonEnergyDistribution{A <: AbstractAxis} <:
+SingleParticleDistribution end
 @inline QEDevents._particle(d::AbstractPhotonEnergyDistribution) = Photon()
 @inline QEDevents._particle_direction(d::AbstractPhotonEnergyDistribution) = Incoming()
 
@@ -68,9 +67,9 @@ function QEDevents._randmom(rng::AbstractRNG, d::AbstractPhotonEnergyDistributio
     return SFourMomentum(energy, zero(energy), zero(energy), energy)
 end
 function QEDevents._randmom(
-    rng::AbstractRNG,
-    d::AbstractPhotonEnergyDistribution{UniformAxis},
-)
+        rng::AbstractRNG,
+        d::AbstractPhotonEnergyDistribution{UniformAxis},
+    )
     energy = _randenergy(rng, d)
     cth = 2 * rand(rng) - one(energy)
     sth = sqrt(one(energy) - cth^2)
@@ -81,23 +80,23 @@ end
 
 # Gaussian distributed Photon energies
 
-struct GaussianPhotonDist{T<:Real,D,A} <: AbstractPhotonEnergyDistribution{A}
+struct GaussianPhotonDist{T <: Real, D, A} <: AbstractPhotonEnergyDistribution{A}
     energy_mean::T
     energy_width::T
     dist::D
     k_vec_axis::A
 
     function GaussianPhotonDist(
-        energy_mean::T,
-        energy_width::T,
-        k_vec_axis::A,
-    ) where {T<:Real,A<:AbstractAxis}
+            energy_mean::T,
+            energy_width::T,
+            k_vec_axis::A,
+        ) where {T <: Real, A <: AbstractAxis}
         dist = truncated(Normal(energy_mean, energy_width), zero(T), _typed_inf(T))
 
-        return new{T,typeof(dist),A}(energy_mean, energy_width, dist, k_vec_axis)
+        return new{T, typeof(dist), A}(energy_mean, energy_width, dist, k_vec_axis)
     end
 end
-@inline GaussianPhotonDist(energy_mean::T, energy_width::T) where {T<:Real} =
+@inline GaussianPhotonDist(energy_mean::T, energy_width::T) where {T <: Real} =
     GaussianPhotonDist(energy_mean, energy_width, UniformAxis())
 energy_mean(d::GaussianPhotonDist) = d.energy_mean
 energy_width(d::GaussianPhotonDist) = d.energy_width

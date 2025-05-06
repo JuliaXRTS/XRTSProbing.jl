@@ -2,66 +2,66 @@
 # - move Lindhard
 # - remove folder structure_factor
 
-struct IdealElectronSystem{TM,T} <: AbstractProperElectronSystem
+struct IdealElectronSystem{TM, T} <: AbstractProperElectronSystem
     electron_density::T
     temperature::T
 
     function IdealElectronSystem{TM}(
-        electron_density::T1,
-        temperature::T2,
-    ) where {
-        T<:Real,
-        T1<:Union{T,Quantity{T}},
-        T2<:Union{T,Quantity{T}},
-        TM<:AbstractTemperatureMode,
-    }
+            electron_density::T1,
+            temperature::T2,
+        ) where {
+            T <: Real,
+            T1 <: Union{T, Quantity{T}},
+            T2 <: Union{T, Quantity{T}},
+            TM <: AbstractTemperatureMode,
+        }
 
         ne_internal = _internalize_density(electron_density)
         temp_internal = _internalize_temperature(temperature)
 
-        new{TM,T}(ne_internal, temp_internal)
+        return new{TM, T}(ne_internal, temp_internal)
     end
 end
 
 function IdealElectronSystem{ZeroTemperature}(
-    electron_density::T1,
-) where {T<:Real,T1<:Union{T,Quantity{T}}}
+        electron_density::T1,
+    ) where {T <: Real, T1 <: Union{T, Quantity{T}}}
     return IdealElectronSystem{ZeroTemperature}(electron_density, zero(T))
 end
 
 function IdealElectronSystem(
-    electron_density::T1,
-    temperature::T2,
-) where {T<:Real,T1<:Union{T,Quantity{T}},T2<:Union{T,Quantity{T}}}
+        electron_density::T1,
+        temperature::T2,
+    ) where {T <: Real, T1 <: Union{T, Quantity{T}}, T2 <: Union{T, Quantity{T}}}
     return IdealElectronSystem{FiniteTemperature}(electron_density, temperature)
 end
 
-@inline temperature(elsys::IdealElectronSystem{ZeroTemperature,T}) where {T<:Real} = zero(T)
-@inline temperature(elsys::IdealElectronSystem{FiniteTemperature,T}) where {T<:Real} =
+@inline temperature(elsys::IdealElectronSystem{ZeroTemperature, T}) where {T <: Real} = zero(T)
+@inline temperature(elsys::IdealElectronSystem{FiniteTemperature, T}) where {T <: Real} =
     elsys.temperature
 @inline electron_density(elsys::IdealElectronSystem) = elsys.electron_density
 
 
 function imag_dynamic_response(
-    elsys::IdealElectronSystem{ZeroTemperature},
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        elsys::IdealElectronSystem{ZeroTemperature},
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     ombar, qbar = _transform_om_q(elsys, om_q)
     return imag_lindhard_zero_temperature(ombar, qbar)
 end
 
 function real_dynamic_response(
-    elsys::IdealElectronSystem{ZeroTemperature},
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        elsys::IdealElectronSystem{ZeroTemperature},
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     ombar, qbar = _transform_om_q(elsys, om_q)
     return real_lindhard_zero_temperature(ombar, qbar)
 end
 
 function imag_dynamic_response(
-    elsys::IdealElectronSystem{FiniteTemperature},
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        elsys::IdealElectronSystem{FiniteTemperature},
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     ombar, qbar = _transform_om_q(elsys, om_q)
 
     if ombar <= zero(ombar)
@@ -76,16 +76,16 @@ function imag_dynamic_response(
 end
 
 function real_dynamic_response(
-    elsys::IdealElectronSystem{FiniteTemperature},
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        elsys::IdealElectronSystem{FiniteTemperature},
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     ombar, qbar = _transform_om_q(elsys, om_q)
     return real_lindhard_nonzero_temperature(ombar, qbar, betabar(elsys))
 end
 
 # zero temperature
 
-function _imag_lindhardDSF_zeroT_minus(omb::T, qb::T) where {T<:Real}
+function _imag_lindhardDSF_zeroT_minus(omb::T, qb::T) where {T <: Real}
     num = _nu_minus(omb, qb)
 
     if abs(num) >= one(T)
@@ -95,7 +95,7 @@ function _imag_lindhardDSF_zeroT_minus(omb::T, qb::T) where {T<:Real}
 
 end
 
-function _imag_lindhardDSF_zeroT_plus(omb::T, qb::T) where {T<:Real}
+function _imag_lindhardDSF_zeroT_plus(omb::T, qb::T) where {T <: Real}
     nup = _nu_plus(omb, qb)
     if abs(nup) >= one(T)
         return zero(T)
@@ -104,12 +104,12 @@ function _imag_lindhardDSF_zeroT_plus(omb::T, qb::T) where {T<:Real}
 
 end
 
-function imag_lindhard_zero_temperature(ombar::T, qbar::T) where {T<:Real}
-    -pi / (4 * qbar) *
-    (_imag_lindhardDSF_zeroT_minus(ombar, qbar) - _imag_lindhardDSF_zeroT_plus(ombar, qbar))
+function imag_lindhard_zero_temperature(ombar::T, qbar::T) where {T <: Real}
+    return -pi / (4 * qbar) *
+        (_imag_lindhardDSF_zeroT_minus(ombar, qbar) - _imag_lindhardDSF_zeroT_plus(ombar, qbar))
 end
 
-function real_lindhard_zero_temperature(ombar::T, qbar::T) where {T<:Real}
+function real_lindhard_zero_temperature(ombar::T, qbar::T) where {T <: Real}
     num = _nu_minus(ombar, qbar)
     nup = _nu_plus(ombar, qbar)
 
@@ -129,7 +129,7 @@ function _integrand_real_Lindhard_finT(omb, qb, x, bbar)
     return _F(x, bbar) * (term1 - term2) / 2
 end
 
-function real_lindhard_nonzero_temperature(ombar::T, qbar::T, bbar::T) where {T<:Real}
+function real_lindhard_nonzero_temperature(ombar::T, qbar::T, bbar::T) where {T <: Real}
 
     num = QEDprobing._nu_minus(ombar, qbar)
     nup = QEDprobing._nu_plus(ombar, qbar)
@@ -153,7 +153,7 @@ function _imag_lindhard_large_om(omb, qb, bbar)
 end
 
 function _om_crit_func(qbar, bbar)
-    e = 1e-8
+    e = 1.0e-8
     mubar = QEDprobing._chemical_potential_normalized(bbar)
     log_arg = 4 * e / pi * qbar * bbar
     r = abs(mubar - inv(bbar) * log(log_arg))
@@ -172,10 +172,10 @@ function _imag_lindhard_finT_unstable(ombar, qbar, bbar)
 end
 
 
-function imag_lindhard_nonzero_temperature(ombar::T, qbar::T, bbar::T) where {T<:Real}
+function imag_lindhard_nonzero_temperature(ombar::T, qbar::T, bbar::T) where {T <: Real}
     if bbar < 5.0 * one(T) &&
-       zero(qbar) < abs(qbar) <= 2e-3 &&
-       abs(ombar) >= _om_crit_func(qbar, bbar)
+            zero(qbar) < abs(qbar) <= 2.0e-3 &&
+            abs(ombar) >= _om_crit_func(qbar, bbar)
         return _imag_lindhard_large_om(ombar, qbar, bbar)
     else
         return _imag_lindhard_finT_unstable(ombar, qbar, bbar)

@@ -1,5 +1,3 @@
-
-
 @inline function _select_accepted(mask, trail_sample)
     # use fancy indexing here: only allowed on single thread CPU
     # TODO: is this event based, or weight based?

@@ -106,7 +106,6 @@ Interface function that returns the value of the associated quantity evaluated o
 function _compute end
 
 
-
 # TODO: extent list of derived/delegated accessors
 """
     compute(stp::AbstractComputationSetup, input::Any)

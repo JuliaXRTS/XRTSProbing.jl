@@ -1,10 +1,10 @@
-struct Thomson{InElectronSpin,InPhotonPol,OutElectronSpin,OutPhotonPol} <:
-       AbstractProcessDefinition where {
-    InElectronSpin<:AbstractSpin,
-    InPhotonPol<:AbstractPolarization,
-    OutElectronSpin<:AbstractSpin,
-    OutPhotonPol<:AbstractPolarization,
-}
+struct Thomson{InElectronSpin, InPhotonPol, OutElectronSpin, OutPhotonPol} <:
+    AbstractProcessDefinition where {
+        InElectronSpin <: AbstractSpin,
+        InPhotonPol <: AbstractPolarization,
+        OutElectronSpin <: AbstractSpin,
+        OutPhotonPol <: AbstractPolarization,
+    }
     in_spin::InElectronSpin
     in_pol::InPhotonPol
 

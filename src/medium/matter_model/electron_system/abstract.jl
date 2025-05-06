@@ -1,4 +1,3 @@
-
 ### general electron systems
 
 abstract type AbstractElectronSystem <: AbstractMatterModel end

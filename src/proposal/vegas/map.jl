@@ -14,7 +14,7 @@
     idx = floor(Int64, yn) + 1
     d = yn + 1 - idx
 
-    nodes(vg, idx) + spacing(vg, idx) * d
+    return nodes(vg, idx) + spacing(vg, idx) * d
 end
 
 @inline function _vegas_map!(vg::VegasGrid{1}, dest::AbstractVector, y::AbstractVector)
@@ -27,7 +27,7 @@ end
 end
 
 @inline function _vegas_map(vg::VegasGrid{1}, y::AbstractVector)
-    _vegas_map!(vg, similar(y), y)
+    return _vegas_map!(vg, similar(y), y)
 end
 
 @inline function _vegas_map(vg::VegasGrid{N}, y_vec::AbstractVector) where {N}
@@ -44,8 +44,8 @@ end
     return res
 end
 
-@inline function _vegas_map(vg::VegasGrid{N}, ymat::AbstractMatrix{T}) where {N,T<:Real}
-    _vegas_map.(Ref(vg), eachrow(ymat))
+@inline function _vegas_map(vg::VegasGrid{N}, ymat::AbstractMatrix{T}) where {N, T <: Real}
+    return _vegas_map.(Ref(vg), eachrow(ymat))
 end
 
 # TODO: public interface
@@ -71,15 +71,15 @@ function _jac_vegas_map!(vg::VegasGrid{1}, dest::AbstractVector, y::AbstractVect
     end
     return dest
 end
-@inline function _jac_vegas_map(vg::VegasGrid{1}, y::AbstractVector{T}) where {T<:Real}
+@inline function _jac_vegas_map(vg::VegasGrid{1}, y::AbstractVector{T}) where {T <: Real}
     return _jac_vegas_map!(vg, ones(T, size(y, 1)), y)
 end
 
-@inline function _jac_vegas_map(vg::VegasGrid{N}, y::AbstractMatrix{T}) where {N,T<:Real}
+@inline function _jac_vegas_map(vg::VegasGrid{N}, y::AbstractMatrix{T}) where {N, T <: Real}
     return _jac_vegas_map!(vg, ones(T, size(y, 1)), y)
 end
 
-function _jac_vegas_map(vg::VegasGrid{N}, yvec::AbstractVector{T}) where {N,T<:Real}
+function _jac_vegas_map(vg::VegasGrid{N}, yvec::AbstractVector{T}) where {N, T <: Real}
     Ng = nbins(vg)
 
     res = one(T)
@@ -95,10 +95,10 @@ function _jac_vegas_map(vg::VegasGrid{N}, yvec::AbstractVector{T}) where {N,T<:R
 end
 
 function _jac_vegas_map!(
-    vg::VegasGrid{N},
-    dest::AbstractVector{T},
-    ymat::AbstractMatrix,
-) where {N,T<:Real}
+        vg::VegasGrid{N},
+        dest::AbstractVector{T},
+        ymat::AbstractMatrix,
+    ) where {N, T <: Real}
     Ng = nbins(vg)
 
     # iterates over (points,ndims)

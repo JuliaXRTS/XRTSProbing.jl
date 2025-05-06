@@ -1,4 +1,3 @@
-
 using QEDprobing
 using QEDcore
 using QEDprocesses
@@ -6,7 +5,7 @@ using QEDprocesses
 proc = Thomson() # default: all spin and all pol
 
 T = 10u"eV"
-n_e = 1e21u"cm^3"
+n_e = 1.0e21u"cm^3"
 
 dsf = LindhardDSF(n_e, T)
 mod = PerturbativeQED(dsf) # pertQED within medium described by dsf

@@ -1,10 +1,10 @@
 # implement rejection sampler here
 
 struct EventGenerator{
-    DCS<:DifferentialCrossSectionCached,
-    PROP<:AbstractProposalDistribution,
-    T<:Real,
-} <: ScatteringProcessDistribution
+        DCS <: DifferentialCrossSectionCached,
+        PROP <: AbstractProposalDistribution,
+        T <: Real,
+    } <: ScatteringProcessDistribution
     dcs::DCS
     proposal::PROP
     max_weight::T
@@ -63,12 +63,12 @@ function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_siz
     # rnd args
     psps =
         PhaseSpacePoint.(
-            process(eg.proposal),
-            model(eg.proposal),
-            phase_space_layout(eg.proposal),
-            Ref(eg.dcs.in_coords),
-            coords,
-        )
+        process(eg.proposal),
+        model(eg.proposal),
+        phase_space_layout(eg.proposal),
+        Ref(eg.dcs.in_coords),
+        coords,
+    )
 
     # rng vals
     weights = @. eg.dcs(psps) * jac
@@ -90,11 +90,11 @@ function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_siz
 end
 
 function generate_events(
-    rng::AbstractRNG,
-    eg::EventGenerator,
-    n::Int,
-    batch_size::Int = 1000,
-)
+        rng::AbstractRNG,
+        eg::EventGenerator,
+        n::Int,
+        batch_size::Int = 1000,
+    )
 
     # TODO:
     # - consider redirect n=1 to the single event generation at compile time by using

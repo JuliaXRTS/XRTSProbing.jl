@@ -1,5 +1,4 @@
-
-struct Event{PSP<:AbstractPhaseSpacePoint,T<:Number}
+struct Event{PSP <: AbstractPhaseSpacePoint, T <: Number}
     psp::PSP
     weight::T
 end

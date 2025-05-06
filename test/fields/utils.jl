@@ -5,8 +5,8 @@ function _is_onshell_photon(mom)
     sph, cph = sincos(phi)
     e = getE(mom)
     return isapprox(getX(mom) / (sth * cph), e) &&
-           isapprox(getY(mom) / (sth * sph), e) &&
-           isapprox(getZ(mom) / cth, e)
+        isapprox(getY(mom) / (sth * sph), e) &&
+        isapprox(getZ(mom) / cth, e)
 end
 
 _axis_index(::XAxis) = 2

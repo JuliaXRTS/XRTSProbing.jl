@@ -1,4 +1,3 @@
-
 function QEDevents._randmom(rng::AbstractRNG, vp::VegasProposal)
     D = ndims(vp)
     y = rand(rng, D)
@@ -51,7 +50,7 @@ function generate_events(rng::AbstractRNG, vp::VegasProposal, n::Int)
     coords = _vegas_map(vp.vgrid, y)
     JAC = _jac_vegas_map(vp.vgrid, y)
 
-    dest = Vector{Event{eltype(vp),Float64}}(undef, n)
+    dest = Vector{Event{eltype(vp), Float64}}(undef, n)
 
     @inbounds for i in eachindex(dest)
         dest[i] = _build_event(vp.dcs, coords[i], JAC[i])

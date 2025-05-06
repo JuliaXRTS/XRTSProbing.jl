@@ -1,5 +1,5 @@
 const HBARC = 197.3269718 # MeV fm
-const HBARC_eV_ANG = HBARC * 1e6 * 1e-5 # eV A
+const HBARC_eV_ANG = HBARC * 1.0e6 * 1.0e-5 # eV A
 const ELECTRONMASS = 0.5109989461e6 # eV
 const ALPHA = 1 / (137.035999074)
 const ALPHA_SQUARE = ALPHA^2

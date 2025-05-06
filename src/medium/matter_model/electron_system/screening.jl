@@ -6,9 +6,9 @@
 end
 
 function local_effective_potential(
-    scr::AbstractScreening,
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        scr::AbstractScreening,
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     vp = pseudo_potential(scr, om_q)
     lfc = local_field_correction(scr, om_q)
 
@@ -33,10 +33,10 @@ end
 Return the value of the dielectric function for the given electron system and given screening.
 """
 function dielectric_function(
-    esys::AbstractProperElectronSystem,
-    scr::AbstractScreening,
-    om_q::NTuple{2,T},
-) where {T<:Real}
+        esys::AbstractProperElectronSystem,
+        scr::AbstractScreening,
+        om_q::NTuple{2, T},
+    ) where {T <: Real}
     rf = dynamic_response(esys, om_q)
     lep = local_effective_potential(scr, om_q)
     return _dielectric_function(rf, lep)
@@ -46,7 +46,7 @@ end
 
 struct NoLocalFieldCorrection <: AbstractLocalFieldCorrection end
 
-function _compute(::NoLocalFieldCorrection, om_q::NTuple{2,T}) where {T<:Real}
+function _compute(::NoLocalFieldCorrection, om_q::NTuple{2, T}) where {T <: Real}
     return zero(T)
 end
 
@@ -56,9 +56,9 @@ abstract type AbstractPseudoPotential end
 
 struct CoulombPseudoPotential <: AbstractPseudoPotential end
 
-function _compute(::CoulombPseudoPotential, om_q::NTuple{2,T}) where {T<:Real}
+function _compute(::CoulombPseudoPotential, om_q::NTuple{2, T}) where {T <: Real}
     om, q = om_q
-    ELEMENTARY_CHARGE_SQUARED / q^2
+    return ELEMENTARY_CHARGE_SQUARED / q^2
 end
 
 ### screening
@@ -70,18 +70,18 @@ struct NoScreening <: AbstractScreening end
 dielectric_function(
     esys::AbstractProperElectronSystem,
     scr::NoScreening,
-    om_q::NTuple{2,T},
-) where {T<:Real} = one(T)
+    om_q::NTuple{2, T},
+) where {T <: Real} = one(T)
 
-local_effective_potential(src::NoScreening, om_q::NTuple{2,T}) where {T<:Real} = zero(T)
-@inline pseudo_potential(scr::NoScreening, om_q::NTuple{2,T}) where {T<:Real} = zero(T)
-@inline local_field_correction(scr::NoScreening, om_q::NTuple{2,T}) where {T<:Real} =
+local_effective_potential(src::NoScreening, om_q::NTuple{2, T}) where {T <: Real} = zero(T)
+@inline pseudo_potential(scr::NoScreening, om_q::NTuple{2, T}) where {T <: Real} = zero(T)
+@inline local_field_correction(scr::NoScreening, om_q::NTuple{2, T}) where {T <: Real} =
     zero(T)
 
 # screeing with pseudo potential and local field correction
 
-struct Screening{PP<:AbstractPseudoPotential,LFC<:AbstractLocalFieldCorrection} <:
-       AbstractScreening
+struct Screening{PP <: AbstractPseudoPotential, LFC <: AbstractLocalFieldCorrection} <:
+    AbstractScreening
     pseudo_potential::PP
     lfc::LFC
 end

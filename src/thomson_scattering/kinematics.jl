@@ -46,8 +46,8 @@ struct InElastic <: AbstractKinematicMode end
 Represents the ps system with init electron at rest and the out photon described in spherical coordiantes, i.e. polar and azimuthal angle.
 
 """
-struct PhotonSphericalLayout{INPSL<:TwoBodyTargetSystem,K<:AbstractKinematicMode} <:
-       AbstractOutPhaseSpaceLayout{INPSL}
+struct PhotonSphericalLayout{INPSL <: TwoBodyTargetSystem, K <: AbstractKinematicMode} <:
+    AbstractOutPhaseSpaceLayout{INPSL}
     in_psl::INPSL
     kin_mode::K
 end
@@ -77,12 +77,12 @@ function _TS_omega_prime_elab(::Elastic, om, cth)
 end
 
 function QEDbase._build_momenta(
-    proc::Thomson,
-    model::PerturbativeQED,
-    in_moms::NTuple{2,<:AbstractFourMomentum},
-    psl::PhotonSphericalLayout,
-    out_coords::NTuple{2,T},
-) where {T<:Real}
+        proc::Thomson,
+        model::PerturbativeQED,
+        in_moms::NTuple{2, <:AbstractFourMomentum},
+        psl::PhotonSphericalLayout,
+        out_coords::NTuple{2, T},
+    ) where {T <: Real}
 
     P = @inbounds in_moms[1]
     K = @inbounds in_moms[2]

@@ -43,7 +43,8 @@ struct InElastic <: AbstractKinematicMode end
 
     ElabPhotonSphSystem()
 
-Represents the ps system with init electron at rest and the out photon described in spherical coordiantes, i.e. polar and azimuthal angle.
+Represents the ps system with init electron at rest and the out photon described in
+spherical coordiantes, i.e. polar and azimuthal angle.
 
 """
 struct PhotonSphericalLayout{INPSL <: TwoBodyTargetSystem, K <: AbstractKinematicMode} <:

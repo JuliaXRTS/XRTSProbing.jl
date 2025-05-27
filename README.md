@@ -29,6 +29,49 @@ restore this, if the package is moved to github
 fields with a cloud of distributed electrons. The code will change rapidly without proper
 announcement. For more curated version of parts of the code, see [`QEDjl-project`](https://github.com/QEDjl-project).
 
+If you use QEDprobing.jl in your work, please cite using the reference given in [CITATION.cff](https://github.com/QEDjl-project/QEDprobing.jl/blob/main/CITATION.cff).
+
+## Installation
+
+### Building from source
+
+---
+
+### Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+```bash
+julia --project add_dev_packages.jl
+```
+
+## Building the docs locally
+
+Building the docs locally involves the following steps:
+
+```bash
+julia --project=docs -e 'using Pkg; Pkg.instantiate(); Pkg.develop(PackageSpec(path=pwd()))'
+julia --project=docs add_dev_packages.jl
+julia --project=docs --color=yes docs/make.jl
+```
+
+The website with the documentation can then be accessed using the browser of your choice
+
+```bash
+open docs/build/index.html
+```
+
+Here `open` stands for your browser of the open command on macOS.
+
+`QEDprobing.jl` is an experimental implementation of the interaction of photons or laser
+fields with a cloud of distributed electrons. The code will change rapidly without proper
+announcement. For more curated version of parts of the code, see [`QEDjl-project`](https://github.com/QEDjl-project).
+
 For more background information on concepts and algorithms used in the development, see
 the [wiki](https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/-/wikis/Overview) (only for members).
 

@@ -22,7 +22,8 @@ function electron_density end
 
     imag_dynamic_response(::AbstractElectronSystem,om_q::NTuple{2,T})
 
-Interface function: return the value of the imaginary part of the dynamic response function associated with the electron system.
+Interface function: return the value of the imaginary part of the dynamic response
+function associated with the electron system.
 """
 function imag_dynamic_response end
 
@@ -30,7 +31,8 @@ function imag_dynamic_response end
 
     real_dynamic_response(::AbstractElectronSystem,om_q::NTuple{2,T})
 
-Interface function: return the value of the real part of the dynamic response function associated with the electron system.
+Interface function: return the value of the real part of the dynamic response function
+associated with the electron system.
 """
 function real_dynamic_response end
 

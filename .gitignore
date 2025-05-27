@@ -14,3 +14,4 @@ node_modules
 *.ipynb
 DEV-*
 .ipynb_checkpoints
+*.pdf

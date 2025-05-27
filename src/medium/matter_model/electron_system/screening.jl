@@ -19,7 +19,8 @@ end
 
     dielectric_function(::AbstractIdealElectronSystem,::AbstractScreening,om_q)
 
-Return the value of the dielectric function for the given proper response function and given local effective potential.
+Return the value of the dielectric function for the given proper response function and
+given local effective potential.
 """
 function _dielectric_function(rf::Number, lep::Number)
     temp = lep * rf

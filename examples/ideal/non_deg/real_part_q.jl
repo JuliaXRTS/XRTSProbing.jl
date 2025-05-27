@@ -1,8 +1,8 @@
 include("common.jl")
 
 bbar_arr = 10.0 .^ (-4:0)
-ombar_arr = 10.0 .^ (-2:1)
-qbar_arr = 10.0 .^ range(-7, 5, 100)
+ombar_arr = 10.0 .^ (-4:1)
+qbar_arr = 10.0 .^ range(-10, 10, 300)
 
 PLOTS = []
 for bbar in bbar_arr
@@ -35,7 +35,7 @@ Pall = plot(
     PLOTS...,
     plot_title = "Ideal Electron Gas, no screening (general vs. non. deg.)",
     layout = (length(bbar_arr), length(ombar_arr)),
-    size = (1300, 1200),
+    size = (2000, 1200),
 )
 
 file_path = joinpath(PLOTDIR, "real_part_q.pdf")

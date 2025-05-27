@@ -7,7 +7,7 @@ using QEDprobing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
-RTOL = 1.0e-2
+RTOL = 1.0e-4
 
 NE = rand(RNG) * 1.0e21u"cm^(-3)"
 #NE = 1e21u"cm^(-3)"

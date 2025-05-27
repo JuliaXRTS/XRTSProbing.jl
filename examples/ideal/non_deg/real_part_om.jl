@@ -3,7 +3,7 @@ include("common.jl")
 bbar_arr = 10.0 .^ (-4:0)
 qbar_arr = 10.0 .^ (-2:2)
 
-ombar_arr = 10.0 .^ range(-5, 7, 111)
+ombar_arr = 10.0 .^ range(-10, 10, 300)
 
 PLOTS = []
 for bbar in bbar_arr

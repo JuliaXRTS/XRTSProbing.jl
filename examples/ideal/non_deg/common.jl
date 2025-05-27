@@ -5,6 +5,7 @@ using BenchmarkTools
 using SpecialFunctions
 using Printf
 using Plots.PlotMeasures
+using LogExpFunctions
 
 import QEDprobing
 

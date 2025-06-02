@@ -25,7 +25,7 @@ function train_iter!(
     # based on psp, rather than coords, because in_coords do not live on GPU)
     # TODO: basing this line on psp also makes it easier to include the init state of the
     # process
-    F = map(vp.dcs, coords)
+    F = map(Base.Fix1(_compute, setup(vp)), coords)
 
     # calculate F times jac
     FxJ = F .* jac
@@ -33,8 +33,10 @@ function train_iter!(
 
     # calculate bin avg
     D = _eff_bin_avg(vg, y, FxJ2)
+
     D = _smooth_bin_avg(D)
     _compress_bin_avg!(D, vp.alpha)
+
 
     # refine grid
     _refine_nodes!(vg, D)

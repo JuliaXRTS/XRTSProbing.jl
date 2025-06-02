@@ -107,31 +107,29 @@ k_vec_axis(d::GaussianPhotonDist) = d.k_vec_axis
 
 
 # uniform photon spectrum
-#=
 # add this after probing setup is merged
-struct UniformPhotonDist{T<:Real,A,D} <: AbstractPhotonEnergyDistribution{A}
+struct UniformPhotonDist{T <: Real, A, D} <: AbstractPhotonEnergyDistribution{A}
     max_energy::T
     k_vec_axis::A
     dist::D
 
     function UniformPhotonDist(
-        max_energy::T,
-        k_vec_axis::A,
-    ) where {T<:Real,A<:AbstractAxis}
+            max_energy::T,
+            k_vec_axis::A,
+        ) where {T <: Real, A <: AbstractAxis}
 
-        dist = Uniform(zero(T),max_energy)
-        return new{T,A,typeof(dist)}(max_energy,k_vec_axis,dist)
+        dist = Uniform(zero(T), max_energy)
+        return new{T, A, typeof(dist)}(max_energy, k_vec_axis, dist)
 
     end
 end
 
 k_vec_axis(d::UniformPhotonDist) = d.k_vec_axis
 max_energy(d::UniformPhotonDist) = d.max_energy
-@inline function _energyweight(d::UniformPhotonDist{T}, omega::S) where {T<:Real,S<:Real}
-    zero(T)<= omega <= max_energy(omega) ? one(promote_type(T,S)) : zero(promote_type(T,S))
+@inline function _energyweight(d::UniformPhotonDist{T}, omega::S) where {T <: Real, S <: Real}
+    return zero(T) <= omega <= max_energy(d) ? one(promote_type(T, S)) : zero(promote_type(T, S))
 end
-@inline _randenergy(rng::AbstractRNG, d::UniformPhotonDist) = rand(rng,d.dist)
-=#
+@inline _randenergy(rng::AbstractRNG, d::UniformPhotonDist) = rand(rng, d.dist)
 
 # TODO: implement other distributions
 # - Poisson

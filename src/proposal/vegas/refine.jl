@@ -76,8 +76,8 @@ function _smooth_bin_avg(d::AbstractMatrix)
     res_d = similar(d)
 
     for j in 1:D
-
         res_d[1, j] = (7 * d[1, j] + d[2, j]) / (8 * s[j])
+
         res_d[end, j] = (d[end - 1, j] + 7 * d[end, j]) / (8 * s[j])
 
         for i in 2:(Ng - 1)
@@ -130,6 +130,7 @@ function _refine_nodes!(vg::VegasGrid{N}, bin_avg::AbstractMatrix{T}) where {N, 
     Ng = nbins(vg)
     delta = sum(bin_avg, dims = 1) ./ Ng
     new_grid = copy(vg.nodes)
+
     # iterate over ndimss
     for d in 1:N
         j = 1

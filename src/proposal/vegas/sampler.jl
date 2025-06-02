@@ -29,16 +29,9 @@ end
 
 @inline function _generate_events(rand_u, vp::VegasProposal)
     coords = _vegas_map(vp.vgrid, rand_u)
-    psp = PhaseSpacePoint(
-        process(vp),
-        model(vp),
-        phase_space_definition(vp),
-        vp.dcs.in_coords,
-        coords,
-    )
-
+    psp = _build_psp(setup(vp), coords)
     JAC = _jac_vegas_map(vp.vgrid, rand_u)
-    F = vp.dcs(psp)
+    F = _compute(setup(vp), psp)
     weight = F * JAC
 
     return Event(psp, weight)
@@ -53,7 +46,7 @@ function generate_events(rng::AbstractRNG, vp::VegasProposal, n::Int)
     dest = Vector{Event{eltype(vp), Float64}}(undef, n)
 
     @inbounds for i in eachindex(dest)
-        dest[i] = _build_event(vp.dcs, coords[i], JAC[i])
+        dest[i] = _build_event(setup(vp), coords[i], JAC[i])
     end
 
     return dest

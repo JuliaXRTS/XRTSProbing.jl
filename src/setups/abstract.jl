@@ -5,6 +5,7 @@
 ###############
 
 abstract type AbstractComputationSetup end
+Base.broadcastable(d::AbstractComputationSetup) = Ref(d)
 
 @inline function _assert_valid_input(stp::AbstractComputationSetup, input)
     return nothing
@@ -31,6 +32,26 @@ abstract type AbstractProcessSetup <: AbstractComputationSetup end
     number_incoming_particles(process(stp))
 @inline QEDbase.number_outgoing_particles(stp::AbstractProcessSetup) =
     number_outgoing_particles(process(stp))
+
+
+function _build_psp(stp::AbstractProcessSetup, incoods::Tuple, outcoords::Tuple)
+    return PhaseSpacePoint(
+        process(stp),
+        model(stp),
+        phase_space_layout(stp),
+        incoods,
+        outcoords
+    )
+end
+
+function _build_psp(stp::AbstractProcessSetup, coords::Tuple)
+    return PhaseSpacePoint(
+        process(stp),
+        model(stp),
+        phase_space_layout(stp),
+        coords
+    )
+end
 
 # TODO:
 # - add `coordinate_boundaries` to the interface (dcs-> infer from psl, pstp -> cuts)

@@ -80,7 +80,7 @@ end
             out_photon_mom = momentum(psp, Outgoing(), Photon())
 
             #TODO: check order
-            mom_transfer = in_photon_mom - out_photon_mom
+            mom_transfer = out_photon_mom - in_photon_mom
             dsf =
                 dynamic_structure_factor(MEDIUM, (getE(mom_transfer), getMag(mom_transfer)))
             ph_dist = energy_spectrum(FIELD, om)

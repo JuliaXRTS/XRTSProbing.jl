@@ -41,6 +41,8 @@ end
     return in_dim + out_dim - n_cached
 end
 
+coordinate_boundaries(dcs::DifferentialCrossSection) = _coordinate_boundaries(process(dcs), model(dcs), phase_space_layout(dcs))
+
 # TODO: remove that
 @inline function _assert_valid_input(dcs::DifferentialCrossSection, input::Tuple)
     n_input = length(input)
@@ -169,6 +171,14 @@ function (diffCS::DifferentialCrossSectionCached{P, M, PS})(
     return differential_cross_section(psp)
 end
 
+function _compute(dcs::DifferentialCrossSectionCached, psp::AbstractPhaseSpacePoint)
+    return dcs(psp)
+end
+
+function _compute(dcs::DifferentialCrossSectionCached, coords::Tuple)
+    return dcs(coords)
+end
+
 @inline function _build_event(
         diffCS::DifferentialCrossSectionCached,
         out_coords::Tuple,
@@ -184,6 +194,8 @@ end
         PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
     return Event(psp, differential_cross_section(psp))
 end
+
+coordinate_boundaries(dcs::DifferentialCrossSectionCached) = _coordinate_boundaries(process(dcs), model(dcs), phase_space_layout(dcs))
 
 # TODO: special implementations
 # - if the diff cs is known directly from coordinates, there is no need to construct the

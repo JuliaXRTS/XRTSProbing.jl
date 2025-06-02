@@ -77,8 +77,8 @@ end
 
 abstract type AbstractProposalDistribution <: ScatteringProcessDistribution end
 
-struct VegasProposal{CS, T, G} <: AbstractProposalDistribution
-    dcs::CS
+struct VegasProposal{STP, T, G} <: AbstractProposalDistribution
+    stp::STP
     alpha::T
     weighted_tot_cs::Ref{T}
     cum_variance::Ref{T}
@@ -86,19 +86,19 @@ struct VegasProposal{CS, T, G} <: AbstractProposalDistribution
     vgrid::G
 
     function VegasProposal(
-            dcs::DCS;
+            stp::STP;
             ret_type::Type{T} = Float64,
             nbins::Int = 1000,
             alpha::T = 1.5,
             #rtol::T = 1e-4,
             #atol::T = 1e-4,
-        ) where {T <: Real, DCS <: DifferentialCrossSectionCached}
-        lower, upper = _coordinate_boundaries(dcs.proc, dcs.model, dcs.psl)
+        ) where {T <: Real, STP <: AbstractProcessSetup}
+        lower, upper = coordinate_boundaries(stp)
         init_vg = _uniform_vegas_nodes(lower, upper, nbins)
         init_tot_cs, init_variance, init_chi_sq = _vp_init_values(T)
 
-        return new{DCS, T, typeof(init_vg)}(
-            dcs,
+        return new{STP, T, typeof(init_vg)}(
+            stp,
             alpha,
             init_tot_cs,
             init_variance,
@@ -108,9 +108,11 @@ struct VegasProposal{CS, T, G} <: AbstractProposalDistribution
     end
 end
 
-QEDbase.process(d::VegasProposal) = d.dcs.proc
-QEDbase.model(d::VegasProposal) = d.dcs.model
-QEDbase.phase_space_layout(d::VegasProposal) = d.dcs.psl
+setup(d::VegasProposal) = d.stp
+QEDbase.process(d::VegasProposal) = process(setup(d))
+QEDbase.model(d::VegasProposal) = model(setup(d))
+QEDbase.phase_space_layout(d::VegasProposal) = phase_space_layout(setup(d))
+
 
 # TODO:
 # - implement the ProcessDistribution interface for VegasProposal

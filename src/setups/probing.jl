@@ -46,6 +46,8 @@ end
 
 degree_of_freedom(stp::ProbingSetup{T, N}) where {T, N} = N
 
+coordinate_boundaries(stp::ProbingSetup) = extrema(kinematic_cuts(stp))
+
 
 # compute
 function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
@@ -53,19 +55,60 @@ function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
     out_photon_mom = momentum(psp, Outgoing(), Photon())
 
     #TODO: check order
-    mom_transfer = in_photon_mom - out_photon_mom
+    mom_transfer = out_photon_mom - in_photon_mom
 
     in_dist = energy_spectrum(background_field(stp), getE(in_photon_mom))
+    #in_dist = 1.0
+    # TODO: move prefac to correct position
     dsf = dynamic_structure_factor(medium(stp), (getE(mom_transfer), getMag(mom_transfer)))
+    #dsf = 1.0
     hard_dcs = differential_cross_section_setup(stp)(psp)
+    #hard_dcs = 1.0
 
-    return in_dist * dsf * hard_dcs
+    #=
+    if isinf(dsf) || isinf(in_dist) || isinf(hard_dcs) || isnan(dsf) || isnan(in_dist) || isnan(hard_dcs)
+        throw(
+            InvalidInputError(
+                """
+                something went wrong at om = $(getE(mom_transfer)) q = $(getMag(mom_transfer))
+                with
+                dsf = $dsf
+                in_dist= $in_dist
+                hard_dcs = $hard_dcs
+                """
+            )
+        )
+    end
+    =#
+    return in_dist * (dsf * hard_dcs)
 end
 
 function _compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
-    all_within_cuts(kinematic_cuts(stp), coords) || return zero(T)
-
 
     psp = PhaseSpacePoint(process(stp), model(stp), phase_space_layout(stp), coords)
     return _compute(stp, psp)
 end
+
+function compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
+    all_within_cuts(kinematic_cuts(stp), coords) || return zero(T)
+
+    return _compute(stp, coords)
+end
+
+# TODO:
+# - rethink and refac this for the sampler!
+# - maybe move this to the abstract process setup
+@inline function _build_event(
+        stp::ProbingSetup,
+        coords::Tuple,
+        jac::Real,
+    )
+    psp =
+        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, coords)
+    return Event(psp, _compute(stp, psp) * jac)
+end
+
+
+# TODO:
+# - think about implementing a probing weight type
+# - this could hold (mom_transfer, in_dist, dsf, hard_dcs) as a result of `compute`

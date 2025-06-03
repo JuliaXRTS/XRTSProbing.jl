@@ -59,17 +59,34 @@ coordinate_boundaries(dcs::DifferentialCrossSection) = _coordinate_boundaries(pr
     return nothing
 end
 
+@inline function _build_dcs_input(diffCS::DifferentialCrossSection, remain_coords::Tuple)
+
+    ccoords = cached_coords(diffCS)
+    ccoord_syms = keys(ccoords)
+    coord_syms = coordinate_symbols(phase_space_layout(diffCS))
+    input = insert_by_name(coord_syms, remain_coords; ccoords...)
+    return input
+end
+
+@inline function _build_psp(diffCS::DifferentialCrossSection, remain_coords::Tuple)
+    input = _build_dcs_input(diffCS, remain_coords)
+    psp = PhaseSpacePoint(
+        process(diffCS),
+        model(diffCS),
+        phase_space_layout(diffCS),
+        input
+    )
+
+    return psp
+end
+
 # TODO:
 # - this adds an overhead of ~40ns -> needs some optimization!
 @inline function _compute_with_cached(
         diffCS::DifferentialCrossSection,
         remain_coords::Tuple,
     )
-    ccoords = cached_coords(diffCS)
-    ccoord_syms = keys(ccoords)
-    coord_syms = coordinate_symbols(phase_space_layout(diffCS))
-    input = insert_by_name(coord_syms, remain_coords; ccoords...)
-
+    input = _build_dcs_input(diffCS, remain_coords)
     return _compute_without_cached(diffCS, input)
 end
 
@@ -136,66 +153,6 @@ end
     return differential_cross_section(psp)
 end
 
-
-# TODO: remove that
-struct DifferentialCrossSectionCached{
-        PROC <: AbstractProcessDefinition,
-        MODEL <: AbstractModelDefinition,
-        PSL <: AbstractOutPhaseSpaceLayout,
-        COORDS <: Tuple,
-    } <: AbstractDifferentialCrossSection
-    proc::PROC
-    model::MODEL
-    psl::PSL
-    in_coords::COORDS
-end
-Base.broadcastable(d::DifferentialCrossSectionCached) = Ref(d)
-
-QEDcore.process(d::DifferentialCrossSectionCached) = d.proc
-QEDcore.model(d::DifferentialCrossSectionCached) = d.model
-QEDcore.phase_space_layout(d::DifferentialCrossSectionCached) = d.psl
-in_coordinates(d::DifferentialCrossSectionCached) = d.in_coords
-
-function (diffCS::DifferentialCrossSectionCached)(out_coords::Tuple)
-    psp =
-        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
-    return differential_cross_section(psp)
-end
-function (diffCS::DifferentialCrossSectionCached{P, M, PS})(
-        psp::AbstractPhaseSpacePoint{P, M, PS},
-    ) where {P, M, PS}
-    # note: the in_coords of the psp might differ from the one stored in diffCS.
-    # However this should not be a problem, because either the psp is constructed using
-    # diffCS.in_coords or the user just wants the diff. CS for the given psp. Both is fine
-    # and we should not complain.
-    return differential_cross_section(psp)
-end
-
-function _compute(dcs::DifferentialCrossSectionCached, psp::AbstractPhaseSpacePoint)
-    return dcs(psp)
-end
-
-function _compute(dcs::DifferentialCrossSectionCached, coords::Tuple)
-    return dcs(coords)
-end
-
-@inline function _build_event(
-        diffCS::DifferentialCrossSectionCached,
-        out_coords::Tuple,
-        jac::Real,
-    )
-    psp =
-        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
-    return Event(psp, differential_cross_section(psp) * jac)
-end
-
-@inline function _build_event(diffCS::DifferentialCrossSectionCached, out_coords::Tuple)
-    psp =
-        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, diffCS.in_coords, out_coords)
-    return Event(psp, differential_cross_section(psp))
-end
-
-coordinate_boundaries(dcs::DifferentialCrossSectionCached) = _coordinate_boundaries(process(dcs), model(dcs), phase_space_layout(dcs))
 
 # TODO: special implementations
 # - if the diff cs is known directly from coordinates, there is no need to construct the

@@ -83,12 +83,14 @@ function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
     return in_dist * (dsf * hard_dcs)
 end
 
+# move this to the generic implementations
 function _compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
 
     psp = PhaseSpacePoint(process(stp), model(stp), phase_space_layout(stp), coords)
     return _compute(stp, psp)
 end
 
+# overwrite the generic one to include check for cuts
 function compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
     all_within_cuts(kinematic_cuts(stp), coords) || return zero(T)
 

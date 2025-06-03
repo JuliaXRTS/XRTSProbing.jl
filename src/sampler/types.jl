@@ -1,80 +1,73 @@
 # implement rejection sampler here
 
 struct EventGenerator{
-        DCS <: DifferentialCrossSectionCached,
+        STP <: AbstractProcessSetup,
         PROP <: AbstractProposalDistribution,
         T <: Real,
     } <: ScatteringProcessDistribution
-    dcs::DCS
+    stp::STP
     proposal::PROP
     max_weight::T
 end
 
-QEDbase.process(eg::EventGenerator) = process(eg.dcs)
-QEDbase.model(eg::EventGenerator) = model(eg.dcs)
-QEDbase.phase_space_layout(eg::EventGenerator) = phase_space_layout(eg.dcs)
+setup(eg::EventGenerator) = eg.stp
+proposal(eg::EventGenerator) = eg.proposal
+max_weight(eg::EventGenerator) = eg.max_weight
+QEDbase.process(eg::EventGenerator) = process(setup(eg))
+QEDbase.model(eg::EventGenerator) = model(setup(eg))
+QEDbase.phase_space_layout(eg::EventGenerator) = phase_space_layout(setup(eg))
 
 function generate_event(rng::AbstractRNG, eg::EventGenerator)
     rejected = true
 
+    # build a psp just to allocate the memory
     psp = PhaseSpacePoint(
-        process(eg.dcs),
-        model(eg.dcs),
-        phase_space_layout(eg.dcs),
-        Tuple(rand(SFourMomentum, number_incoming_particles(process(eg.dcs)))),
-        Tuple(rand(SFourMomentum, number_outgoing_particles(process(eg.dcs)))),
+        process(eg),
+        model(eg),
+        phase_space_layout(eg),
+        Tuple(rand(SFourMomentum, number_incoming_particles(process(eg)))),
+        Tuple(rand(SFourMomentum, number_outgoing_particles(process(eg)))),
     )
     w = 0.0
 
     while rejected
-        rand_u = rand(rng, ndims(eg.proposal))
+        rand_u = rand(rng, ndims(proposal(eg)))
         rand_probability = rand(rng)
 
-        coords, jac = _build_coords(eg.proposal, rand_u)
+        coords, jac = _build_coords(proposal(eg), rand_u)
 
-        psp = PhaseSpacePoint(
-            process(eg.dcs),
-            model(eg.dcs),
-            phase_space_layout(eg.dcs),
-            eg.dcs.in_coords,
-            coords,
-        )
+        psp = _build_psp(proposal(eg), coords)
+        w = compute(setup(eg), psp) * jac
 
-        w = eg.dcs(psp) * jac
-
-        if _rejection_filter(w, rand_probability, eg.max_weight)
+        if _rejection_filter(w, rand_probability, max_weight(eg))
             rejected = false
         end
     end
 
-    return Event(psp, _residual_weight(w, eg.max_weight))
+    return Event(psp, _residual_weight(w, max_weight(eg)))
 end
 
 function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_size::Int)
 
 
     # generation of rnd args
-    rand_us = rand(rng, batch_size, ndims(eg.proposal))
+    ## generate vegas coords
+    rand_us = rand(rng, batch_size, ndims(proposal(eg)))
     rand_probabilies = rand(rng, batch_size)
 
     # TODO: consider using `sample(rng,dcs,sampler)` returning the psp and the weight
-    coords, jac = _build_coords(eg.proposal, rand_us)
+    #transform vegas coords into setup coords
+    coords, jac = _build_coords(proposal(eg), rand_us)
 
-    # rnd args
-    psps =
-        PhaseSpacePoint.(
-        process(eg.proposal),
-        model(eg.proposal),
-        phase_space_layout(eg.proposal),
-        Ref(eg.dcs.in_coords),
-        coords,
-    )
+    # build psp from setup coords
+    psps = _build_psp.(proposal(eg), coords)
 
     # rng vals
-    weights = @. eg.dcs(psps) * jac
+    # build full weight from setup coords and proposal jac
+    weights = @. compute(setup(eg), psps) * jac
 
     # filter mask
-    mask = _rejection_filter.(weights, rand_probabilies, eg.max_weight)
+    mask = _rejection_filter.(weights, rand_probabilies, max_weight(eg))
 
     # arg selection
     accepted_psps = _select_accepted(mask, psps)
@@ -83,7 +76,7 @@ function _generate_weights_batch(rng::AbstractRNG, eg::EventGenerator, batch_siz
     accepted_weights = _select_accepted(mask, weights)
 
     # value update
-    _update_residual_weight!(accepted_weights, eg.max_weight)
+    _update_residual_weight!(accepted_weights, max_weight(eg))
 
     # return
     return accepted_psps, accepted_weights
@@ -93,7 +86,7 @@ function generate_events(
         rng::AbstractRNG,
         eg::EventGenerator,
         n::Int,
-        batch_size::Int = 1000,
+        batch_size::Int = min(n, 1000),
     )
 
     # TODO:
@@ -106,9 +99,9 @@ function generate_events(
     # - consider using shared memory for this to write the result in parallel
     accepted_weights = Float64[]
     psp_type = QEDevents._assemble_psp_type(
-        process(eg.dcs),
-        model(eg.dcs),
-        phase_space_layout(eg.dcs),
+        process(eg),
+        model(eg),
+        phase_space_layout(eg),
         SFourMomentum{Float64},
     )
     accepted_psps = psp_type[]

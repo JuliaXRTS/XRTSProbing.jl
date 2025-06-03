@@ -15,8 +15,8 @@ end
     return result
 end
 
-function _compute end
 
+function _compute end
 
 # TODO: extent list of derived/delegated accessors
 function compute(stp::AbstractComputationSetup, input)
@@ -33,6 +33,8 @@ abstract type AbstractProcessSetup <: AbstractComputationSetup end
 @inline QEDbase.number_outgoing_particles(stp::AbstractProcessSetup) =
     number_outgoing_particles(process(stp))
 
+
+# generic building of phase space points
 
 function _build_psp(stp::AbstractProcessSetup, incoods::Tuple, outcoords::Tuple)
     return PhaseSpacePoint(

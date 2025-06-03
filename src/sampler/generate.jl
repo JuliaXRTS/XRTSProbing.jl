@@ -7,15 +7,15 @@ end
 
 function _generate_weights(
         rng::AbstractRNG,
-        dcs::DifferentialCrossSectionCached,
+        stp::AbstractProcessSetup,
         vp::QEDprobing.VegasProposal,
         N::Int,
     )
-    return _build_weights(dcs, vp, rand(rng, N, ndims(vp)))
+    return _build_weights(stp, vp, rand(rng, N, ndims(vp)))
 end
 
 function _build_weights(
-        dcs::DifferentialCrossSectionCached,
+        stp::AbstractProcessSetup,
         vp::QEDprobing.VegasProposal,
         rand_u::AbstractArray,
     )
@@ -25,10 +25,9 @@ function _build_weights(
         process(vp),
         model(vp),
         phase_space_definition(vp),
-        Ref(vp.dcs.in_coords),
         coords,
     )
-    weights = @. dcs(psps) * jac
+    weights = @. compute(stp, psps) * jac
 
     return weights
 end

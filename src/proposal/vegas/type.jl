@@ -113,6 +113,9 @@ QEDbase.process(d::VegasProposal) = process(setup(d))
 QEDbase.model(d::VegasProposal) = model(setup(d))
 QEDbase.phase_space_layout(d::VegasProposal) = phase_space_layout(setup(d))
 
+function _build_psp(vp::VegasProposal, coords::Tuple)
+    return _build_psp(setup(vp), coords)
+end
 
 # TODO:
 # - implement the ProcessDistribution interface for VegasProposal

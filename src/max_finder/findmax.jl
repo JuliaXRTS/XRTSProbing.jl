@@ -1,6 +1,6 @@
 function Base.findmax(
         rng::AbstractRNG,
-        dcs::DifferentialCrossSectionCached,
+        stp::AbstractProcessSetup,
         method::AbstractSampleBasedMaxFinder,
         sampler::ScatteringProcessDistribution,
     )
@@ -15,7 +15,8 @@ function Base.findmax(
     # TODO: is this general enough?
     samples, jac = _generate_coords(rng, sampler, N)
 
-    weights = @. dcs(samples) * jac
+    # think about a three argument compute: compute(stp,sampler,samples)??
+    weights = @. _compute(stp, samples) * jac
 
     return _findmax(method, weights)
 

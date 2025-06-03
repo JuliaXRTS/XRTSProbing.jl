@@ -26,8 +26,7 @@ const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e
 
 
 @testset "om: $om" for om in OMEGAS
-    test_in_coords = (om,)
-    DCSCACHED = DifferentialCrossSectionCached(PROC, MODEL, OUTPSL, test_in_coords)
+    DCSCACHED = DifferentialCrossSection(PROC, MODEL, OUTPSL; energy_2 = om)
 
 
     # build proposal

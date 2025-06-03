@@ -116,22 +116,4 @@ const OUTPSL = PhotonSphericalLayout(INPSL)
             end
         end
     end
-
-    @testset "cached input" begin
-        @testset "($om,$cth,$phi)" for (om, cth, phi) in
-            Iterators.product(OMEGAS, CTHS, PHIS)
-            in_ps = (om,)
-            out_ps = (cth, phi)
-
-            DIFFCS_SETUP = DifferentialCrossSectionCached(PROC, MODEL, OUTPSL, in_ps)
-
-            psp = PhaseSpacePoint(PROC, MODEL, OUTPSL, in_ps, out_ps)
-
-            groundtruth_diff_cs = differential_cross_section(psp)
-
-            diff_cs = DIFFCS_SETUP(out_ps)
-
-            @test isapprox(diff_cs, groundtruth_diff_cs, atol = ATOL, rtol = RTOL)
-        end
-    end
 end

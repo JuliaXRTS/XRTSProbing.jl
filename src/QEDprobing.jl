@@ -71,7 +71,7 @@ export HBARC,
 export AbstractComputationSetup, AbstractProcessSetup
 export compute, scattering_process, physical_model
 
-export DifferentialCrossSection, DifferentialCrossSectionCached
+export DifferentialCrossSection
 export cached_coords
 
 # remove if patch_QEDcore is resolved
@@ -126,10 +126,10 @@ include("fields/utils.jl")
 include("fields/photon_dists.jl")
 include("fields/types.jl")
 
-include("thomson_scattering/process.jl")
-include("thomson_scattering/kinematics.jl")
-include("thomson_scattering/cross_section.jl")
-include("thomson_scattering/sampler.jl")
+include("hard_scattering/thomson_scattering/process.jl")
+include("hard_scattering/thomson_scattering/kinematics.jl")
+include("hard_scattering/thomson_scattering/cross_section.jl")
+include("hard_scattering/thomson_scattering/sampler.jl")
 
 include("medium/utils.jl")
 include("medium/temperature.jl")

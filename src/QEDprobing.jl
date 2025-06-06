@@ -144,9 +144,12 @@ include("medium/matter_model/electron_system/ideal/impl.jl")
 include("medium/matter_model/electron_system/screening.jl")
 include("medium/matter_model/electron_system/interacting.jl")
 
-include("setups/abstract.jl")
-include("setups/differential_cross_section.jl")
-include("setups/probing.jl")
+include("setups/interface.jl")
+include("setups/generic.jl")
+include("setups/impl/differential_cross_section.jl")
+include("setups/impl/probing.jl")
+
+
 include("events.jl")
 
 include("proposal/vegas/utils.jl")

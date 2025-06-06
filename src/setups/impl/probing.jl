@@ -1,30 +1,37 @@
-struct ProbingSetup{T, DOF, D, F, M, C} <: AbstractProcessSetup
+abstract type AbstractProbingSetup{P, M, PSL} <: AbstractProcessSetup{P, M, PSL} end
+
+struct ProbingSetup{T, DOF, P, M, PSL, D, F, MEDIUM, C} <: AbstractProbingSetup{P, M, PSL}
     dcs::D
     field::F
-    medium::M
+    medium::MEDIUM
     kin_cuts::C
 
     function ProbingSetup(
             dcs::D,
             field::F,
-            medium::M,
+            medium::MEDIUM,
             cuts::C,
         ) where {
             N,
             T <: Real,
-            D <: DifferentialCrossSection,
-            F <: QEDprobing.AbstractSpectrumBasedField,
-            M <: AbstractMatterModel, # consider updating to abstract medium?!
+            P <: AbstractProcessDefinition,
+            M <: AbstractModelDefinition,
+            PSL <: AbstractOutPhaseSpaceLayout,
+            D <: AbstractDifferentialCrossSection{P, M, PSL},
+            F <: AbstractSpectrumBasedField,
+            MEDIUM <: AbstractMatterModel, # consider updating to abstract medium?!
             C <: AbstractKinematicCuts{N, T},
         }
 
+        # TODO: remove this and introduce (N,T) as type parameter to AbstractProcessSetup
+        # (and therefore AbstractDifferentialCrossSection)
         degree_of_freedom(cuts) == degree_of_freedom(dcs) || throw(
             ArgumentError(
                 "number of cuts must be equal to the degree-of-freedom given by the differential cross section",
             ),
         )
 
-        return new{T, N, D, F, M, C}(dcs, field, medium, cuts)
+        return new{T, N, P, M, PSL, D, F, MEDIUM, C}(dcs, field, medium, cuts)
     end
 end
 
@@ -47,7 +54,6 @@ end
 degree_of_freedom(stp::ProbingSetup{T, N}) where {T, N} = N
 
 coordinate_boundaries(stp::ProbingSetup) = extrema(kinematic_cuts(stp))
-
 
 # compute
 function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
@@ -83,7 +89,8 @@ function _compute(stp::ProbingSetup, psp::PhaseSpacePoint)
     return in_dist * (dsf * hard_dcs)
 end
 
-# move this to the generic implementations
+# overwrite generic fallback to include dof check in the types
+# TODO: remove this, after it is brought upstream
 function _compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real, N}
 
     psp = PhaseSpacePoint(process(stp), model(stp), phase_space_layout(stp), coords)
@@ -96,21 +103,3 @@ function compute(stp::ProbingSetup{T, N}, coords::NTuple{N, T}) where {T <: Real
 
     return _compute(stp, coords)
 end
-
-# TODO:
-# - rethink and refac this for the sampler!
-# - maybe move this to the abstract process setup
-@inline function _build_event(
-        stp::ProbingSetup,
-        coords::Tuple,
-        jac::Real,
-    )
-    psp =
-        PhaseSpacePoint(diffCS.proc, diffCS.model, diffCS.psl, coords)
-    return Event(psp, _compute(stp, psp) * jac)
-end
-
-
-# TODO:
-# - think about implementing a probing weight type
-# - this could hold (mom_transfer, in_dist, dsf, hard_dcs) as a result of `compute`

@@ -97,8 +97,6 @@ function QEDbase._build_momenta(
 
     Pp = P + K - Kp
     return Pp, Kp
-    moms = _TS_momenta_elab_sph(in_moms, cth, phi)
-    return moms
 end
 
 function _coordinate_boundaries(::Thomson, ::PerturbativeQED, ::PhotonSphericalLayout)

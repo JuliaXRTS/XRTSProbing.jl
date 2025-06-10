@@ -49,6 +49,7 @@ export AbstractLocalFieldCorrection, NoLocalFieldCorrection
 
 # concrete electron systems
 export IdealElectronSystem
+export AbstractResponseApproximation, NoApprox
 export InteractingElectronSystem
 
 ### Probing Setup
@@ -134,15 +135,24 @@ include("hard_scattering/thomson_scattering/sampler.jl")
 include("medium/utils.jl")
 include("medium/temperature.jl")
 
-include("medium/matter_model/abstract.jl")
-include("medium/matter_model/electron_system/utils.jl")
-include("medium/matter_model/electron_system/abstract.jl")
-include("medium/matter_model/electron_system/impl.jl")
-include("medium/matter_model/electron_system/ideal/approx.jl")
-include("medium/matter_model/electron_system/ideal/lindhard.jl")
-include("medium/matter_model/electron_system/ideal/impl.jl")
-include("medium/matter_model/electron_system/screening.jl")
-include("medium/matter_model/electron_system/interacting.jl")
+
+include("medium/interface.jl")
+include("medium/generic.jl")
+include("medium/electron_system/utils.jl")
+include("medium/electron_system/interface.jl")
+include("medium/electron_system/generic.jl")
+include("medium/electron_system/ideal/approximations/interface.jl")
+include("medium/electron_system/ideal/approximations/no_approx.jl")
+include("medium/electron_system/ideal/utils.jl")
+include("medium/electron_system/ideal/interface.jl")
+include("medium/electron_system/ideal/generic.jl")
+include("medium/electron_system/ideal/impl.jl")
+include("medium/electron_system/interacting/screening/interface.jl")
+include("medium/electron_system/interacting/screening/generic.jl")
+include("medium/electron_system/interacting/screening/impl.jl")
+include("medium/electron_system/interacting/interface.jl")
+include("medium/electron_system/interacting/generic.jl")
+include("medium/electron_system/interacting/impl.jl")
 
 include("setups/interface.jl")
 include("setups/generic.jl")

@@ -1,25 +1,3 @@
-@inline _fermi_wave_vector(ne::T) where {T <: Real} = cbrt(3 * pi^2 * ne)
-@inline fermi_wave_vector(esys::AbstractElectronSystem) =
-    _fermi_wave_vector(electron_density(esys))
-
-@inline _fermi_energy_from_kF(kF::T) where {T <: Real} = kF^2 / 2
-@inline fermi_energy(esys::AbstractElectronSystem) =
-    _fermi_energy_from_kF(fermi_wave_vector(esys))
-
-@inline beta(esys::AbstractElectronSystem) = inv(temperature(esys))
-@inline betabar(esys::AbstractElectronSystem) = fermi_energy(esys) * beta(esys)
-
-function _transform_om_q(elsys::AbstractElectronSystem, om_q::NTuple{2, T}) where {T <: Real}
-    kF = fermi_wave_vector(elsys)
-    EF = fermi_energy(elsys)
-
-    om, q = om_q
-    ombar = om / EF
-    qbar = q / kF
-
-    return ombar, qbar
-end
-
 function dynamic_response(esys::AbstractElectronSystem, om_q::NTuple{2, T}) where {T <: Real}
     return real_dynamic_response(esys, om_q) + 1im * imag_dynamic_response(esys, om_q)
 end

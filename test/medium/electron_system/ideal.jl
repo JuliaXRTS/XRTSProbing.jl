@@ -67,7 +67,7 @@ end
 
             if iszero(T)
                 groundtruth_imag_rf =
-                    QEDprobing.imag_lindhard_zero_temperature(om / EF, q / KF)
+                    QEDprobing._imag_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
                 @test isapprox(
                     groundtruth_imag_rf,
                     imag_dynamic_response(test_system, (om, q)),
@@ -75,7 +75,7 @@ end
                 )
 
                 groundtruth_real_rf =
-                    QEDprobing.real_lindhard_zero_temperature(om / EF, q / KF)
+                    QEDprobing._real_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
                 @test isapprox(
                     groundtruth_real_rf,
                     real_dynamic_response(test_system, (om, q)),
@@ -89,7 +89,8 @@ end
                     rtol = RTOL,
                 )
             else
-                groundtruth_imag_rf = QEDprobing.imag_lindhard_nonzero_temperature(
+                groundtruth_imag_rf = QEDprobing._imag_lindhard_nonzero_temperature(
+                    NoApprox(),
                     om / EF,
                     q / KF,
                     betabar(test_system),
@@ -100,7 +101,8 @@ end
                     rtol = RTOL,
                 )
 
-                groundtruth_real_rf = QEDprobing.real_lindhard_nonzero_temperature(
+                groundtruth_real_rf = QEDprobing._real_lindhard_nonzero_temperature(
+                    NoApprox(),
                     om / EF,
                     q / KF,
                     betabar(test_system),

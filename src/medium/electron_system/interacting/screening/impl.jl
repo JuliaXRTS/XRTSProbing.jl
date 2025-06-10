@@ -1,50 +1,9 @@
-# local effective potential
-
-
-@inline function _local_effective_potential(vp, lfc)
-    return vp * (one(lfc) - lfc)
-end
-
-function local_effective_potential(
-        scr::AbstractScreening,
-        om_q::NTuple{2, T},
-    ) where {T <: Real}
-    vp = pseudo_potential(scr, om_q)
-    lfc = local_field_correction(scr, om_q)
-
-    return _local_effective_potential(vp, lfc)
-end
-
-"""
-
-    dielectric_function(::AbstractIdealElectronSystem,::AbstractScreening,om_q)
-
-Return the value of the dielectric function for the given proper response function and
-given local effective potential.
-"""
-function _dielectric_function(rf::Number, lep::Number)
-    temp = lep * rf
-    return one(temp) - temp
-end
-
-"""
-
-    dielectric_function(::AbstractIdealElectronSystem,::AbstractScreening,om_q)
-
-Return the value of the dielectric function for the given electron system and given screening.
-"""
-function dielectric_function(
-        esys::AbstractProperElectronSystem,
-        scr::AbstractScreening,
-        om_q::NTuple{2, T},
-    ) where {T <: Real}
-    rf = dynamic_response(esys, om_q)
-    lep = local_effective_potential(scr, om_q)
-    return _dielectric_function(rf, lep)
-end
-
 # local field correction
+"""
+    NoLocalFieldCorrection <: AbstractLocalFieldCorrection
 
+Represents a model with no local field correction (i.e., the correction is zero).
+"""
 struct NoLocalFieldCorrection <: AbstractLocalFieldCorrection end
 
 function _compute(::NoLocalFieldCorrection, om_q::NTuple{2, T}) where {T <: Real}
@@ -52,9 +11,11 @@ function _compute(::NoLocalFieldCorrection, om_q::NTuple{2, T}) where {T <: Real
 end
 
 # pseudo potential
+"""
+    CoulombPseudoPotential <: AbstractPseudoPotential
 
-abstract type AbstractPseudoPotential end
-
+Represents the bare Coulomb pseudo potential: V(q) = e² / q².
+"""
 struct CoulombPseudoPotential <: AbstractPseudoPotential end
 
 function _compute(::CoulombPseudoPotential, om_q::NTuple{2, T}) where {T <: Real}
@@ -63,24 +24,57 @@ function _compute(::CoulombPseudoPotential, om_q::NTuple{2, T}) where {T <: Real
 end
 
 ### screening
-
 # no screening
+"""
+    NoScreening <: AbstractScreening
 
+A screening model with no dielectric screening; dielectric function is unity, and corrections vanish.
+"""
 struct NoScreening <: AbstractScreening end
 
+"""
+    dielectric_function(esys, scr::NoScreening, om_q) -> Real
+
+Return the dielectric function for a `NoScreening` model, which is always 1.
+"""
 dielectric_function(
     esys::AbstractProperElectronSystem,
     scr::NoScreening,
     om_q::NTuple{2, T},
 ) where {T <: Real} = one(T)
 
+"""
+    local_effective_potential(scr::NoScreening, om_q) -> Real
+
+Return the local effective potential for the `NoScreening` model, which is zero.
+"""
 local_effective_potential(src::NoScreening, om_q::NTuple{2, T}) where {T <: Real} = zero(T)
+
+"""
+    pseudo_potential(scr::NoScreening, om_q) -> Real
+
+Return the pseudo potential for the `NoScreening` model, which is zero.
+"""
 @inline pseudo_potential(scr::NoScreening, om_q::NTuple{2, T}) where {T <: Real} = zero(T)
+
+"""
+    local_field_correction(scr::NoScreening, om_q) -> Real
+
+Return the local field correction for the `NoScreening` model, which is zero.
+"""
 @inline local_field_correction(scr::NoScreening, om_q::NTuple{2, T}) where {T <: Real} =
     zero(T)
 
 # screeing with pseudo potential and local field correction
+"""
+    Screening{PP, LFC} <: AbstractScreening
 
+A general screening model that combines a pseudo potential and a local field correction.
+
+# Fields
+- `pseudo_potential`: An instance of `AbstractPseudoPotential`.
+- `lfc`: An instance of `AbstractLocalFieldCorrection`.
+"""
 struct Screening{PP <: AbstractPseudoPotential, LFC <: AbstractLocalFieldCorrection} <:
     AbstractScreening
     pseudo_potential::PP

@@ -66,7 +66,9 @@ export HBARC,
     ALPHA,
     ALPHA_SQUARE,
     ELEMENTARY_CHARGE_SQUARED,
-    ELEMENTARY_CHARGE
+    ELEMENTARY_CHARGE,
+    HARTREE,
+    BOHR_RADIUS_ANG
 
 # compute setups
 export AbstractComputationSetup, AbstractProcessSetup

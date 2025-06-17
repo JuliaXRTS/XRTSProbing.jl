@@ -1,3 +1,8 @@
+# TODO:
+# - refactor this!
+# - add more units with energy dimention (current, time, momentum?)
+# - move this to `NaturallyUnitful` (`naturally` is type unstable!)
+
 const speed_of_light = 1u"c"
 const hbar = Unitful.ħ
 const kBoltzmann = Unitful.k
@@ -28,10 +33,6 @@ end
 function _get_dim_factor(x::Unitful.Dimension{:Temperature}, p::Rational)
     return kBoltzmann^p
 end
-
-# TODO:
-# - add more units with energy dimention (current, time, momentum?)
-# - move this to `NaturallyUnitful` (`naturally` is type unstable!)
 
 
 function mynatural(q; base = u"eV")
@@ -69,3 +70,30 @@ function _energy2me_dimless(energy)
     energy_eV = mynatural(energy)
     return _eV2me_dimless(energy_eV, -1)
 end
+
+# simple unit transforms
+# TODO:
+# - write unit tests for this
+# - if other unit transforms pop up, add them here
+#
+_bohr2ang(x_bohr, p = 1) = x_bohr * (BOHR_RADIUS_ANG^p)
+_bohr2cm(x_bohr, p = 1) = x_bohr * ((BOHR_RADIUS_ANG * 1.0e-8)^p)
+_bohr2fm(x_bohr, p = 1) = x_bohr * ((BOHR_RADIUS_ANG * 1.0e5)^p)
+_bohr2inv_eV(x_bohr, p = 1) = x_bohr * ((BOHR_RADIUS_ANG / HBARC_eV_ANG)^p)
+_bohr2inv_me(x_bohr, p = 1) = x_bohr * ((BOHR_RADIUS_ANG / HBARC_eV_ANG * ELECTRONMASS)^p)
+
+_inv_bohr2ang(x_inv_bohr, p = 1) = x_inv_bohr / (BOHR_RADIUS_ANG^p)
+_inv_bohr2cm(x_inv_bohr, p = 1) = x_inv_bohr / ((BOHR_RADIUS_ANG * 1.0e-8)^p)
+_inv_bohr2fm(x_inv_bohr, p = 1) = x_inv_bohr / ((BOHR_RADIUS_ANG * 1.0e5)^p)
+_inv_bohr2eV(x_inv_bohr, p = 1) = x_inv_bohr / ((BOHR_RADIUS_ANG / HBARC_eV_ANG)^p)
+_inv_bohr2me(x_inv_bohr, p = 1) = x_inv_bohr / ((BOHR_RADIUS_ANG / HBARC_eV_ANG * ELECTRONMASS)^p)
+
+_ang2inv_eV(x_ang, p = 1) = x_ang / (HBARC_eV_ANG^p)
+_inv_ang2eV(x_inv_ang, p = 1) = x_inv_ang * (HBARC_eV_ANG^p)
+
+_me2eV(x_me, p = 1) = x_me * (ELECTRONMASS)^p
+_me2keV(x_me, p = 1) = x_me * (ELECTRONMASS * 1.0e-3)^p
+_me2MeV(x_me, p = 1) = x_me * (ELECTRONMASS * 1.0e-6)^p
+_me2hartree(x_me, p = 1) = x_me * (ELECTRONMASS / HARTREE)^p
+_me2inv_ang(x_me, p = 1) = x_me * (ELECTRONMASS / HBARC_eV_ANG)^p
+_me2inv_bohr(x_me, p = 1) = x_me * (ELECTRONMASS / HBARC_eV_ANG * BOHR_RADIUS_ANG)^p

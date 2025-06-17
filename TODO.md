@@ -34,3 +34,9 @@ one(T)`. Therefore, every implementation just needs to implement `out_ps_fac`.
 
 - [ ] Implement `CombinedEventGenerator` which combines single event generators (performing Bernoulli on the total cross-sections and then standard generation with the
       selected process)
+
+## Medium
+
+- [ ] Consider implementing formula from Arista, Brandt 1984
+- [ ] Consider using u = ombar/qbar instead of qbar (like in Arista,Brandt 1984)
+- [ ] consider implementing energy loss function and dielectric function

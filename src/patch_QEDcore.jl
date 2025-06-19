@@ -37,3 +37,27 @@ function QEDcore.PhaseSpacePoint(
         ntuple(i -> coords[in_dim + i], out_dim),
     )
 end
+
+# PSL for heads-on collision
+
+abstract type AbstractTwoBodyHeadsOnSystem <: AbstractTwoBodyInPhaseSpaceLayout end
+QEDbase.phase_space_dimension(proc, model, ::AbstractTwoBodyHeadsOnSystem) = 2 # E, omega
+
+struct PhotonElectronHeadsOnSystem <: AbstractTwoBodyHeadsOnSystem end
+
+Base.broadcastable(psl::PhotonElectronHeadsOnSystem) = Ref(psl)
+
+function QEDbase._build_momenta(
+        ::AbstractProcessDefinition,
+        ::AbstractPerturbativeModel,
+        ::PhotonElectronHeadsOnSystem,
+        in_coords::NTuple{2, T}
+    ) where {T <: Real}
+    E, om = in_coords
+    rho = sqrt(E^2 - one(E))
+
+    K = SFourMomentum(om, 0, 0, om)
+    P = SFourMomentum(E, 0, 0, -rho)
+
+    return (P, K)
+end

@@ -80,7 +80,7 @@ export cached_coords
 
 # remove if patch_QEDcore is resolved
 export coordinate_symbol, coordinate_symbols, coord_index
-
+export PhotonElectronHeadsOnSystem
 
 ### Event Generation
 

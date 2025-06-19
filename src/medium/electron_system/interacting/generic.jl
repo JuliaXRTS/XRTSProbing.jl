@@ -84,6 +84,9 @@ function dynamic_response(
         iesys::AbstractInteractingElectronSystem,
         om_q::NTuple{2, T},
     ) where {T <: Real}
+
+    # TODO: think about implementing this directly with imag and real part
+    # -> this could also be used directly for imag and real part of chi_RPA
     rf = dynamic_response(proper_electron_system(iesys), om_q)
     lep = local_effective_potential(screening(iesys), om_q)
     eps = _dielectric_function(rf, lep)

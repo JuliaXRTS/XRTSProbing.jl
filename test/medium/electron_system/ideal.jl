@@ -5,195 +5,184 @@ using Unitful
 
 using QEDprobing
 
+include("checks.jl")
+
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
 RTOL = 1.0e-4
 
-NE = rand(RNG) * 1.0e21u"cm^(-3)"
-#NE = 1e21u"cm^(-3)"
-NE_internal = QEDprobing._internalize_density(NE)
-KF = QEDprobing._fermi_wave_vector(NE_internal)
-EF = QEDprobing._fermi_energy_from_kF(KF)
+_transform12(x01) = x01 + one(x01)
 
-OMS = EF .* (0.0, rand(RNG), 1 + rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
-QS = KF .* (1.0e-2 * rand(RNG), rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
-TEMPS_eV = (rand(RNG), rand(RNG) * 10, rand(RNG) * 100) .* 1u"eV"
-TEMPS = QEDprobing._internalize_temperature.(TEMPS_eV)
+NES_ccm = 1u"cm^(-3)" .* (
+    _transform12(rand(RNG)) * 1.0e20,
+    _transform12(rand(RNG)) * 1.0e21,
+    _transform12(rand(RNG)) * 1.0e22,
+    _transform12(rand(RNG)) * 1.0e23,
+    _transform12(rand(RNG)) * 1.0e24,
+)
+TEMPS_eV = 1u"eV" .* (
+    rand(RNG),
+    rand(RNG) * 10,
+    rand(RNG) * 100,
+    rand(RNG) * 1000,
+)
 
-TEST_SYSTEM_zeroT = IdealElectronSystem{ZeroTemperature}(NE)
-TEST_SYSTEMS_finT = IdealElectronSystem.(NE, TEMPS)
-TEST_SYSTEMS = (TEST_SYSTEM_zeroT, TEST_SYSTEMS_finT...)
+APPROXS = (NoApprox(), NonDegenerated(), Degenerated())
 
-@testset "zero temperature" begin
-    @testset "properties" begin
-        @test iszero(temperature(TEST_SYSTEM_zeroT))
-        @test isinf(beta(TEST_SYSTEM_zeroT))
-        @test isinf(betabar(TEST_SYSTEM_zeroT))
-    end
 
-    @testset "matching" begin
-        test_system_small_finT = IdealElectronSystem(NE, 1.0e-2 * eps())
+@testset "ne = $ne_ccm" for ne_ccm in NES_ccm
+    ne_internal = QEDprobing._internalize_density(ne_ccm)
 
-        @testset "om: $om, q: $q" for (om, q) in Iterators.product(OMS, QS)
-            @test isapprox(
-                imag_dynamic_response(TEST_SYSTEM_zeroT, (om, q)),
-                imag_dynamic_response(test_system_small_finT, (om, q)),
-                rtol = 1.0e-2,
-                atol = 1.0e-6,
-            )
+    KF = QEDprobing._fermi_wave_vector(ne_internal)
+    EF = QEDprobing._fermi_energy_from_kF(KF)
+    N0 = KF / (2 * pi^2)
+
+    OMS = EF .* (0.0, rand(RNG), 1 + rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
+    QS = KF .* (1.0e-2 * rand(RNG), rand(RNG), 2 + rand(RNG), 3 + rand(RNG))
+
+    ### Zero temperature
+
+    @testset "T = 0.0 eV" begin
+        test_system = IdealElectronSystem{ZeroTemperature}(ne_ccm)
+        test_system_small_finT = IdealElectronSystem(ne_ccm, 1.0e-2 * eps())
+
+        @testset "properties" begin
+            _rf_property_check(test_system, ne_internal, zero(ne_internal))
+            @test iszero(temperature(test_system))
+            @test isinf(beta(test_system))
+            @test isinf(betabar(test_system))
         end
 
-    end
-end
-
-@testset "temp: $T" for (i, T) in enumerate((zero(eltype(TEMPS)), TEMPS...))
-    test_system = TEST_SYSTEMS[i]
-
-    @testset "properties" begin
-        @test temperature(test_system) == T
-        @test isapprox(beta(test_system), inv(T))
-        @test fermi_wave_vector(test_system) == KF
-        @test fermi_energy(test_system) == EF
-        @test electron_density(test_system) == NE_internal
-    end
-    @testset "stability" begin
         @testset "q: $q" for q in QS
-            @test real_dynamic_response(test_system, (0.0, q)) <= zero(q)
-            @test imag_dynamic_response(test_system, (0.0, q)) <= zero(q)
-        end
-    end
-    @testset "sanity check" begin
-        @testset "om: $om, q: $q" for (om, q) in Iterators.product(OMS, QS)
 
-            if iszero(T)
-                groundtruth_imag_rf =
-                    QEDprobing._imag_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
-                @test isapprox(
-                    groundtruth_imag_rf,
-                    imag_dynamic_response(test_system, (om, q)),
-                    rtol = RTOL,
-                )
-
-                groundtruth_real_rf =
-                    QEDprobing._real_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
-                @test isapprox(
-                    groundtruth_real_rf,
-                    real_dynamic_response(test_system, (om, q)),
-                    rtol = RTOL,
-                )
-
-                groundtruth_rf = groundtruth_real_rf + 1im * groundtruth_imag_rf
-                @test isapprox(
-                    groundtruth_rf,
-                    dynamic_response(test_system, (om, q)),
-                    rtol = RTOL,
-                )
-            else
-                groundtruth_imag_rf = QEDprobing._imag_lindhard_nonzero_temperature(
-                    NoApprox(),
-                    om / EF,
-                    q / KF,
-                    betabar(test_system),
-                )
-                @test isapprox(
-                    groundtruth_imag_rf,
-                    imag_dynamic_response(test_system, (om, q)),
-                    rtol = RTOL,
-                )
-
-                groundtruth_real_rf = QEDprobing._real_lindhard_nonzero_temperature(
-                    NoApprox(),
-                    om / EF,
-                    q / KF,
-                    betabar(test_system),
-                )
-                @test isapprox(
-                    groundtruth_real_rf,
-                    real_dynamic_response(test_system, (om, q)),
-                )
-
-                groundtruth_rf = groundtruth_real_rf + 1im * groundtruth_imag_rf
-                @test isapprox(groundtruth_rf, dynamic_response(test_system, (om, q)))
+            @testset "rf stability" begin
+                _rf_stability_check(test_system, q)
+            end
+            @testset "rf f-sum rule" begin
+                _f_sum_rule_check(test_system, q)
             end
 
-        end
+            @testset "om: $om" for om in OMS
 
-    end
-
-    @testset "symmetry" begin
-        @testset "om: $om, q: $q" for (om, q) in Iterators.product(OMS, QS)
-            input_pos_q = (om, q)
-            input_pos_om = (om, q)
-            input_neg_om = (-om, q)
-            input_neg_both = (-om, -q)
-            @test isapprox(
-                dynamic_response(test_system, input_pos_q),
-                dynamic_response(test_system, input_neg_both),
-                rtol = RTOL,
-            )
-            @test isapprox(
-                real_dynamic_response(test_system, input_pos_om),
-                real_dynamic_response(test_system, input_neg_om),
-                rtol = RTOL,
-            )
-            @test isapprox(
-                imag_dynamic_response(test_system, input_pos_om),
-                -imag_dynamic_response(test_system, input_neg_om),
-                rtol = RTOL,
-            )
-        end
-    end
-
-    @testset "f-sum rule" begin
-        if iszero(T)
-            @testset "q: $q" for q in QS
-                qb = q / KF
-                lower_om_bound = EF * max(zero(qb), qb^2 - 2 * qb)
-                upper_om_bound = EF * (qb^2 + 2 * qb)
-                tmp, err = quadgk(
-                    x -> x * imag_dynamic_response(test_system, (x, q)),
-                    lower_om_bound,
-                    upper_om_bound,
-                )
-                _first_moment = -2 * tmp / pi
-                @test isapprox(
-                    _first_moment,
-                    2 * q^2 * fermi_energy(test_system) / 3,
-                    rtol = 1.0e-2,
-                )
-            end
-        end
-    end
-
-    @testset "dynamic structure factor" begin
-        @testset "om: $om, q: $q" for (om, q) in Iterators.product(OMS, QS)
-            @testset "sanity check" begin
-                if !iszero(om)
-                    fac = pi * electron_density(test_system)
-
-                    im_rf = imag_dynamic_response(test_system, (om, q))
-                    groundtruth_dsf =
-                        iszero(T) ? -im_rf / fac :
-                        -inv(fac * (one(om) - exp(-om / temperature(test_system)))) * im_rf
-
-                    dsf = dynamic_structure_factor(test_system, (om, q))
-                    @test isapprox(dsf, groundtruth_dsf)
-                    @test dsf >= zero(dsf)
+                @testset "rf symmetry" begin
+                    _rf_symmetry_check(test_system, om, q, RTOL)
                 end
-            end
 
-            @testset "detailed balance" begin
-                if !iszero(om) && !iszero(T)
-                    input_pos_om = (om, q)
-                    input_neg_om = (-om, q)
-
+                @testset "rf sanity check" begin
+                    groundtruth_imag_rf =
+                        N0 * QEDprobing._imag_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
                     @test isapprox(
-                        dynamic_structure_factor(test_system, input_neg_om),
-                        exp(-om * beta(test_system)) *
-                            dynamic_structure_factor(test_system, input_pos_om),
+                        groundtruth_imag_rf,
+                        imag_dynamic_response(test_system, (om, q)),
+                        rtol = RTOL,
+                    )
+
+                    groundtruth_real_rf =
+                        N0 * QEDprobing._real_lindhard_zero_temperature(NoApprox(), om / EF, q / KF)
+                    @test isapprox(
+                        groundtruth_real_rf,
+                        real_dynamic_response(test_system, (om, q)),
+                        rtol = RTOL,
+                    )
+                    groundtruth_rf = groundtruth_real_rf + 1im * groundtruth_imag_rf
+                    @test isapprox(
+                        groundtruth_rf,
+                        dynamic_response(test_system, (om, q)),
+                        rtol = RTOL,
                     )
                 end
+
+                @testset "rf matching" begin
+                    @test isapprox(
+                        imag_dynamic_response(test_system, (om, q)),
+                        imag_dynamic_response(test_system_small_finT, (om, q)),
+                        rtol = 1.0e-2,
+                        atol = 1.0e-6,
+                    )
+                end
+
+                @testset "dsf sanity check" begin
+                    if !iszero(om)
+                        _dsf_sanity_check(test_system, om, q)
+                    end
+                end
             end
         end
     end
+
+    ### Finite temperature
+
+    @testset "T = $T_eV" for T_eV in TEMPS_eV
+        T_internal = QEDprobing._internalize_temperature.(T_eV)
+        @testset "approx = $approx" for approx in APPROXS
+
+            test_system = IdealElectronSystem(ne_ccm, T_eV, approx)
+
+            @testset "properties" begin
+                _rf_property_check(test_system, ne_internal, T_internal)
+                @test response_approximation(test_system) == approx
+            end
+
+            @testset "q: $q" for q in QS
+
+                @testset "rf stability" begin
+                    _rf_stability_check(test_system, q)
+                end
+
+                if approx == NoApprox()
+                    @testset "rf f-sum rule" begin
+                        _f_sum_rule_check(test_system, q)
+                    end
+                end
+
+                @testset "om: $om" for om in OMS
+
+                    @testset "rf symmetry" begin
+                        _rf_symmetry_check(test_system, om, q, RTOL)
+                    end
+
+                    @testset "rf sanity check" begin
+                        groundtruth_imag_rf = N0 * QEDprobing._imag_lindhard_nonzero_temperature(
+                            approx,
+                            om / EF,
+                            q / KF,
+                            betabar(test_system),
+                        )
+                        @test isapprox(
+                            groundtruth_imag_rf,
+                            imag_dynamic_response(test_system, (om, q)),
+                            rtol = RTOL,
+                        )
+
+                        groundtruth_real_rf = N0 * QEDprobing._real_lindhard_nonzero_temperature(
+                            approx,
+                            om / EF,
+                            q / KF,
+                            betabar(test_system),
+                        )
+                        @test isapprox(
+                            groundtruth_real_rf,
+                            real_dynamic_response(test_system, (om, q)),
+                        )
+
+                        groundtruth_rf = groundtruth_real_rf + 1im * groundtruth_imag_rf
+                        @test isapprox(groundtruth_rf, dynamic_response(test_system, (om, q)))
+                    end
+
+                    @testset "dsf sanity check" begin
+                        if !iszero(om)
+                            _dsf_sanity_check(test_system, om, q)
+                        end
+                    end
+
+                    @testset "detailed balance" begin
+                        if !iszero(om)
+                            _dsf_detailed_balance_check(test_system, om, q)
+                        end
+                    end
+                end # om
+            end # q
+        end # approx
+    end # finite T
+
 end

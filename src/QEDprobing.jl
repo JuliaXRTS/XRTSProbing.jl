@@ -49,7 +49,8 @@ export AbstractLocalFieldCorrection, NoLocalFieldCorrection
 
 # concrete electron systems
 export IdealElectronSystem
-export AbstractResponseApproximation, NoApprox
+export AbstractResponseApproximation, NoApprox, NonDegenerated, Degenerated
+export response_approximation
 export InteractingElectronSystem
 
 ### Probing Setup
@@ -105,6 +106,7 @@ using QEDfields
 using Random
 using StaticArrays
 using LogExpFunctions
+using SpecialFunctions
 using QuadGK
 using TupleTools
 using Distributions
@@ -145,6 +147,8 @@ include("medium/electron_system/interface.jl")
 include("medium/electron_system/generic.jl")
 include("medium/electron_system/ideal/approximations/interface.jl")
 include("medium/electron_system/ideal/approximations/no_approx.jl")
+include("medium/electron_system/ideal/approximations/non_degenerated.jl")
+include("medium/electron_system/ideal/approximations/degenerated.jl")
 include("medium/electron_system/ideal/utils.jl")
 include("medium/electron_system/ideal/interface.jl")
 include("medium/electron_system/ideal/generic.jl")

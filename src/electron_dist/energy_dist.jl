@@ -1,5 +1,3 @@
-# TODO: make this a Single particle distribution (similar to the photon dists)
-
 # source: https://en.wikipedia.org/wiki/Maxwell–Boltzmann_distribution#Distribution_for_the_momentum_vector
 struct MaxellElectronEnergyDistribution{T, D} <: AbstractElectronEnergyDistribution
     dist::D

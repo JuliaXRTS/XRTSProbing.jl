@@ -1,7 +1,3 @@
-# TODO:
-# - is this really necessary? For photons, this makes sense, because their distribution
-# can be interpreted as a field.
-
 abstract type AbstractElectronDistribution end
 abstract type AbstractElectronEnergyDistribution end
 

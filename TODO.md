@@ -37,6 +37,7 @@ one(T)`. Therefore, every implementation just needs to implement `out_ps_fac`.
 
 ## Medium
 
-- [ ] Consider implementing formula from Arista, Brandt 1984
+- [x] Consider implementing formula from Arista, Brandt 1984
 - [ ] Consider using u = ombar/qbar instead of qbar (like in Arista,Brandt 1984)
 - [ ] consider implementing energy loss function and dielectric function
+- [ ] Check if RPA works correctly

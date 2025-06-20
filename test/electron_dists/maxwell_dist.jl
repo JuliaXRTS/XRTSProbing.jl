@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using Random
 using Unitful
 
@@ -26,6 +25,3 @@ TEMPS_eV = 1u"eV" .* (
     # FIXME: enable if QEDevents.jl is fixed
     @test_broken isapprox(energy_width(test_dist), sqrt(T_internal * ((3 * pi - 8) / pi)^2 + 1))
 end
-=======
-# TBW
->>>>>>> f4c8e3f (added electron dist; added event IO)

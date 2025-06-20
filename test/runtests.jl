@@ -20,4 +20,3 @@ for (root, dirs, files) in walkdir(@__DIR__)
         end
     end
 end
-#include("test-electron_dist.jl")

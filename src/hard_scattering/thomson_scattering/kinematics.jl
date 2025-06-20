@@ -3,6 +3,7 @@
 # system, builds k_prime and p_prime. And, finally boosts them back into the original
 # frame.
 # - be aware: if the init electron is in elab already, no boost is necessary!
+# - add unit tests for other in_psl
 
 
 # Phase Space Definitions
@@ -41,13 +42,13 @@ struct InElastic <: AbstractKinematicMode end
 
 """
 
-    ElabPhotonSphSystem()
+    PhotonSphericalLayout()
 
 Represents the ps system with init electron at rest and the out photon described in
 spherical coordiantes, i.e. polar and azimuthal angle.
 
 """
-struct PhotonSphericalLayout{INPSL <: TwoBodyTargetSystem, K <: AbstractKinematicMode} <:
+struct PhotonSphericalLayout{INPSL <: AbstractTwoBodyInPhaseSpaceLayout, K <: AbstractKinematicMode} <:
     AbstractOutPhaseSpaceLayout{INPSL}
     in_psl::INPSL
     kin_mode::K
@@ -58,7 +59,7 @@ kinematic_mode(psl::PhotonSphericalLayout) = psl.kin_mode
 is_elastic(psl::PhotonSphericalLayout) = is_elastic(kinematic_mode(psl))
 
 # default
-PhotonSphericalLayout(in_psl::TwoBodyTargetSystem) =
+PhotonSphericalLayout(in_psl::AbstractTwoBodyInPhaseSpaceLayout) =
     PhotonSphericalLayout(in_psl, InElastic())
 
 # interface
@@ -69,13 +70,28 @@ QEDbase.phase_space_dimension(
     ::PhotonSphericalLayout,
 ) = 2
 
-function _TS_omega_prime_elab(::InElastic, om, cth)
-    return om / (1 + om * (1 - cth))
+function _omega_prime(::InElastic, P, K, cth_prime, phi_prime)
+    Pt = P + K
+    Et = getE(Pt)
+    rhot = getMag(Pt)
+    s = getMass2(Pt)
+
+    sth_prime = sqrt(1 - cth_prime^2)
+
+    cth_t = getCosTheta(Pt)
+    sth_t = sqrt(1 - cth_t^2)
+    phi_t = getPhi(Pt)
+
+    angle_fac = sth_t * sth_prime * cos(phi_t - phi_prime) + cth_t * cth_prime
+
+
+    return (s - one(s)) / (2 * (Et - rhot * angle_fac))
 end
 
-function _TS_omega_prime_elab(::Elastic, om, cth)
-    return om
+function _omega_prime(::Elastic, P, K, cth, phi)
+    return getE(K)
 end
+
 
 function QEDbase._build_momenta(
         proc::Thomson,
@@ -89,8 +105,7 @@ function QEDbase._build_momenta(
     K = @inbounds in_moms[2]
     cth = @inbounds out_coords[1]
     phi = @inbounds out_coords[2]
-    om = getE(K)
-    omp = _TS_omega_prime_elab(kinematic_mode(psl), om, cth)
+    omp = _omega_prime(kinematic_mode(psl), P, K, cth, phi)
     sth = sqrt(1 - cth^2)
     sphi, cphi = sincos(phi)
     Kp = SFourMomentum(omp, omp * sth * cphi, omp * sth * sphi, omp * cth)

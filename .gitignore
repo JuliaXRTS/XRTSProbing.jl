@@ -17,3 +17,4 @@ DEV-*
 *.pdf
 *.png
 *.h5
+*.jld2

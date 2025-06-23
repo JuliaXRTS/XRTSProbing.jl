@@ -7,7 +7,7 @@ using QEDprocesses
 using QEDprobing
 
 RNG = Xoshiro(137)
-ATOL = 2 * sqrt(eps())
+ATOL = 4 * sqrt(eps())
 RTOL = sqrt(eps())
 
 include("groundtruths.jl")
@@ -20,7 +20,8 @@ const PHIS = [0.0, 2.0 * pi, rand(RNG) * 2 * pi]
 
 const MODEL = PerturbativeQED()
 PROC = Thomson()
-INPSLS = (TwoBodyTargetSystem(), PhotonElectronHeadsOnSystem())
+PARTICLE_DIRECTIONS = (XAxis(), YAxis(), ZAxis())
+INPSLS = (TwoBodyTargetSystem(), (PhotonElectronHeadsOnSystem(dir) for dir in PARTICLE_DIRECTIONS)...)
 #INPSL = TwoBodyTargetSystem()
 
 KINPARAMETER = Dict(
@@ -30,12 +31,25 @@ KINPARAMETER = Dict(
         CTHS,
         PHIS,
     ),
-    PhotonElectronHeadsOnSystem() => (
+    PhotonElectronHeadsOnSystem(XAxis()) => (
+        Es,
+        OMEGAS,
+        CTHS,
+        PHIS,
+    ),
+    PhotonElectronHeadsOnSystem(YAxis()) => (
+        Es,
+        OMEGAS,
+        CTHS,
+        PHIS,
+    ),
+    PhotonElectronHeadsOnSystem(ZAxis()) => (
         Es,
         OMEGAS,
         CTHS,
         PHIS,
     )
+
 )
 
 

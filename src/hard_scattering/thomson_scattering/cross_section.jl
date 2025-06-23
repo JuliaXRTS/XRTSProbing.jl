@@ -54,6 +54,9 @@ function QEDbase._matrix_element_square(
     return 8 * ELEMENTARY_CHARGE_SQUARE^2 * (one(cth) + cth^2)
 end
 
+# return the cos of the angle between the given momenta
+_cos_delta_theta(mom1, mom2) = dot(view(mom1, 2:4), view(mom2, 2:4)) / (getMag(mom1) * getMag(mom2))
+
 function QEDbase.unsafe_differential_cross_section(
         psp::PhaseSpacePoint{
             Thomson{AllSpin, AllPol, AllSpin, AllPol},
@@ -61,8 +64,9 @@ function QEDbase.unsafe_differential_cross_section(
             <:PhotonSphericalLayout,
         },
     )
+    k = momentum(psp, Incoming(), Photon())
     k_prime = momentum(psp, Outgoing(), Photon())
-    cth = getCosTheta(k_prime)
+    cth = _cos_delta_theta(k, k_prime)
     return QEDprobing._TS_diffCS_pol_spin_sum(cth)
 end
 

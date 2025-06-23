@@ -1,19 +1,5 @@
 """
 
-    AbstractAxis
-
-Abstract base type to describe the axis of a vector, e.g. the k-vector of a photon. Mostly used for multiple dispatch.
-"""
-abstract type AbstractAxis end
-abstract type AbstractDefiniteAxis <: AbstractAxis end
-abstract type AbstractIndefiniteAxis <: AbstractAxis end
-
-struct XAxis <: AbstractDefiniteAxis end
-struct YAxis <: AbstractDefiniteAxis end
-struct ZAxis <: AbstractDefiniteAxis end
-
-"""
-
     UniformAxis()
 
 Helper type to indicate a random direction for the respective photon.

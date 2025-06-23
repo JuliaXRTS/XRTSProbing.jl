@@ -105,6 +105,20 @@ export generate_event, generate_events
 # events container
 export Event
 
+# data handling
+export datadir_raw, datadir_raw_ext
+export datadir_processed, datadir_processed_ext
+
+export readdir_raw_data, readdir_raw_ext_data
+export readdir_processed_data, readdir_processed_ext_data
+
+# MCSS
+export datadir_raw_MCSS, datadir_raw_testdata_MCSS
+export datadir_processed_MCSS, datadir_processed_testdata_MCSS
+export readdir_raw_MCSS, readdir_raw_testdata_MCSS
+export readdir_processed_MCSS, readdir_processed_testdata_MCSS
+export ExtDataPaths, datapaths_raw_MCSS
+
 using QEDbase
 using QEDcore
 using QEDprocesses
@@ -121,6 +135,7 @@ using Distributions
 using Unitful
 using HDF5
 using LinearAlgebra
+using DrWatson
 
 function hello_world()
     return "Hello, World!"
@@ -170,6 +185,7 @@ include("medium/electron_system/interacting/interface.jl")
 include("medium/electron_system/interacting/generic.jl")
 include("medium/electron_system/interacting/impl.jl")
 
+include("pathutils.jl")
 include("data_driven/lookup.jl")
 
 include("electron_dist/types.jl")

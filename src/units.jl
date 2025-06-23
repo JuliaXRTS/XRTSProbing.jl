@@ -97,3 +97,13 @@ _me2MeV(x_me, p = 1) = x_me * (ELECTRONMASS * 1.0e-6)^p
 _me2hartree(x_me, p = 1) = x_me * (ELECTRONMASS / HARTREE)^p
 _me2inv_ang(x_me, p = 1) = x_me * (ELECTRONMASS / HBARC_eV_ANG)^p
 _me2inv_bohr(x_me, p = 1) = x_me * (ELECTRONMASS / HBARC_eV_ANG * BOHR_RADIUS_ANG)^p
+
+# this is inv(Ang) to eV!
+function _convert_Ang_to_eV(q)
+    return q * HBARC_eV_ANG
+end
+
+# this is eV to inv Ang!
+function _convert_eV_to_Ang(q)
+    return q / HBARC_eV_ANG
+end

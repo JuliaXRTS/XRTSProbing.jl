@@ -37,7 +37,6 @@ function train_iter!(
     D = _smooth_bin_avg(D)
     _compress_bin_avg!(D, vp.alpha)
 
-
     # refine grid
     _refine_nodes!(vg, D)
 

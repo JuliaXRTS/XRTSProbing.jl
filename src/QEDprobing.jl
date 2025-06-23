@@ -53,8 +53,13 @@ export AbstractResponseApproximation, NoApprox, NonDegenerated, Degenerated
 export response_approximation
 export InteractingElectronSystem
 
+# electron distributions
+export EnergyBasedElectronDistribution
+export MaxellElectronEnergyDistribution
+
 ### Probing Setup
 export ProbingSetup
+export ElectronProbingSetup
 export medium, background_field, kinematic_cuts, differential_cross_section_setup
 
 ### Utils
@@ -97,6 +102,9 @@ export QuantileReductionMethod
 export EventGenerator
 export generate_event, generate_events
 
+# events container
+export Event
+
 using QEDbase
 using QEDcore
 using QEDprocesses
@@ -111,6 +119,7 @@ using QuadGK
 using TupleTools
 using Distributions
 using Unitful
+using HDF5
 
 function hello_world()
     return "Hello, World!"
@@ -160,10 +169,15 @@ include("medium/electron_system/interacting/interface.jl")
 include("medium/electron_system/interacting/generic.jl")
 include("medium/electron_system/interacting/impl.jl")
 
+include("electron_dist/types.jl")
+include("electron_dist/energy_dist.jl")
+
+
 include("setups/interface.jl")
 include("setups/generic.jl")
 include("setups/impl/differential_cross_section.jl")
 include("setups/impl/probing.jl")
+include("setups/impl/probing_elec.jl")
 
 
 include("events.jl")

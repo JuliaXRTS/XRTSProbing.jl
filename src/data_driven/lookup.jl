@@ -39,6 +39,11 @@ struct GridLookupTable{T1, T2, T3}
     end
 end
 
+# TODO:
+# - change signature of lookup to lookup(GLT, method, column,row)
+# - check behaviour for sampling outside of the lookup
+# - add some I/O for lookup tables (simple saving and loading)
+
 ########
 # extrapolation methods
 ########

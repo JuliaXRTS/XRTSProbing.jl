@@ -6,6 +6,10 @@ using BenchmarkTools
 using Random
 using Plots
 
+# setup parameter
+NE = 1.0e21u"cm^(-3)"
+TEMP = 10.0u"keV"
+
 # differential cross section
 PROC = Thomson()
 MODEL = PerturbativeQED()
@@ -13,17 +17,17 @@ PSL = PhotonSphericalLayout(TwoBodyTargetSystem())
 DCS = DifferentialCrossSection(PROC, MODEL, PSL)
 
 # field
-FIELD = DistributionBasedField(QEDprobing.GaussianPhotonDist(1.0e-3, 1.0e-3, ZAxis()))
-#FIELD = DistributionBasedField(QEDprobing.UniformPhotonDist(2e-3,ZAxis() ))
+#FIELD = DistributionBasedField(QEDprobing.GaussianPhotonDist(1.0e-3, 1.0e-3, ZAxis()))
+FIELD = DistributionBasedField(QEDprobing.UniformPhotonDist(2.0e-3, ZAxis()))
 
 # medium
-MEDIUM = IdealElectronSystem(2.01e29u"m^(-3)", 12.53u"eV")
+MEDIUM = IdealElectronSystem(NE, TEMP, NonDegenerated())
 
 # kin cuts
 CUTS = KinematicCuts(
     (
-        1.0e-6,
-        -1.0,
+        1.0e-4,
+        0.0,
         0.0,
     ),
     (
@@ -41,7 +45,7 @@ VP = VegasProposal(probing_setup)
 
 ## training
 RNG = Xoshiro(137)
-MAXITER = 100
+MAXITER = 50
 NCALLS = 10000
 
 train!(RNG, VP, MAXITER, NCALLS)

@@ -15,3 +15,5 @@ node_modules
 DEV-*
 .ipynb_checkpoints
 *.pdf
+*.png
+*.h5

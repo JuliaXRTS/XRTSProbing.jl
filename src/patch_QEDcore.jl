@@ -38,6 +38,8 @@ function QEDcore.PhaseSpacePoint(
     )
 end
 
+QEDcore.momenta(psp::AbstractPhaseSpacePoint) = (momenta(psp, Incoming())..., momenta(psp, Outgoing())...)
+
 # PSL for heads-on collision
 
 abstract type AbstractTwoBodyHeadsOnSystem <: AbstractTwoBodyInPhaseSpaceLayout end

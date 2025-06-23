@@ -8,13 +8,15 @@ using Random
 using StatsPlots
 using LaTeXStrings
 
+DATADIR = "data"
+PLOTDIR = "plots"
 
 # differential cross section
 PROC = Thomson()
 MODEL = PerturbativeQED()
-PSL = PhotonSphericalLayout(PhotonElectronHeadsOnSystem())
+PSL = PhotonSphericalLayout(PhotonElectronHeadsOnSystem(XAxis()))
 
-event_list = QEDprobing.load("events.h5", PROC, MODEL, PSL)
+event_list = QEDprobing.load(joinpath(DATADIR, "events.h5"), PROC, MODEL, PSL)
 
 momentum_transfer(ev::Event) = momentum_transfer(ev.psp)
 function momentum_transfer(psp::AbstractPhaseSpacePoint)
@@ -52,14 +54,20 @@ cth_sample = out_photon_cth.(event_list)
 
 #P = histogram(q_sample,xlim = (0.0,0.01))
 P = histogram(q_sample)
-savefig(P, "test_q2.pdf")
+filename = "momentum_transfer.pdf"
+save_path = joinpath(PLOTDIR, filename)
+savefig(P, save_path)
 
 #P = histogram(om_sample,xlim = (-1e-5,0.0))
 P = histogram(om_sample)
-savefig(P, "test_om2.pdf")
+filename = "energy_transfer.pdf"
+save_path = joinpath(PLOTDIR, filename)
+savefig(P, save_path)
 
 P = histogram(cth_sample)
-savefig(P, "test_cth2.pdf")
+filename = "scattering_angle.pdf"
+save_path = joinpath(PLOTDIR, filename)
+savefig(P, save_path)
 
 
 #P = histogram2d(om_sample, q_sample,bins=(40,40),cmap=:plasma,show_empty=true,dpi=600,normalize=:pdf,size=(800,800))
@@ -72,7 +80,11 @@ P = marginalhist(
     cmap = :binary,
     show_empty = true
 )
-savefig(P, "test2.png")
+filename = "energy_momentum_transfer.png"
+save_path = joinpath(PLOTDIR, filename)
+savefig(P, save_path)
 
 P = histogram(omx_sample, nbins = 100, cmap = :magma)
-savefig(P, "test_omx2.pdf")
+filename = "init_photon_energy.pdf"
+save_path = joinpath(PLOTDIR, filename)
+savefig(P, save_path)

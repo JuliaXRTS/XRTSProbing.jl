@@ -105,6 +105,23 @@ export generate_event, generate_events
 # events container
 export Event
 
+# data handling
+export datadir_raw, datadir_raw_ext
+export datadir_processed, datadir_processed_ext
+
+export readdir_raw_data, readdir_raw_ext_data
+export readdir_processed_data, readdir_processed_ext_data
+
+# MCSS
+export datadir_raw_MCSS, datadir_raw_testdata_MCSS
+export datadir_processed_MCSS, datadir_processed_testdata_MCSS
+export readdir_raw_MCSS, readdir_raw_testdata_MCSS
+export readdir_processed_MCSS, readdir_processed_testdata_MCSS
+export ExtDataPaths, datapaths_raw_MCSS
+
+# lookup
+
+
 using QEDbase
 using QEDcore
 using QEDprocesses
@@ -120,6 +137,8 @@ using TupleTools
 using Distributions
 using Unitful
 using HDF5
+using LinearAlgebra
+using DrWatson
 
 function hello_world()
     return "Hello, World!"
@@ -145,10 +164,16 @@ include("hard_scattering/thomson_scattering/kinematics.jl")
 include("hard_scattering/thomson_scattering/cross_section.jl")
 include("hard_scattering/thomson_scattering/sampler.jl")
 
+include("pathutils.jl")
+include("data_driven/lookup.jl")
+include("data_driven/mcss/utils.jl")
+include("data_driven/mcss/parser.jl")
+include("data_driven/mcss/io_raw.jl")
+include("data_driven/mcss/io_processed.jl")
+include("data_driven/mcss/path.jl")
+
 include("medium/utils.jl")
 include("medium/temperature.jl")
-
-
 include("medium/interface.jl")
 include("medium/generic.jl")
 include("medium/electron_system/utils.jl")
@@ -172,13 +197,11 @@ include("medium/electron_system/interacting/impl.jl")
 include("electron_dist/types.jl")
 include("electron_dist/energy_dist.jl")
 
-
 include("setups/interface.jl")
 include("setups/generic.jl")
 include("setups/impl/differential_cross_section.jl")
 include("setups/impl/probing.jl")
 include("setups/impl/probing_elec.jl")
-
 
 include("events.jl")
 

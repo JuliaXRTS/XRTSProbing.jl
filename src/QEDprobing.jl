@@ -170,6 +170,8 @@ include("medium/electron_system/interacting/interface.jl")
 include("medium/electron_system/interacting/generic.jl")
 include("medium/electron_system/interacting/impl.jl")
 
+include("data_driven/lookup.jl")
+
 include("electron_dist/types.jl")
 include("electron_dist/energy_dist.jl")
 

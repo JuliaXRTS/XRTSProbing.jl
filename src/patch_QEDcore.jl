@@ -62,7 +62,7 @@ QEDbase.phase_space_dimension(proc, model, ::AbstractTwoBodyHeadsOnSystem) = 2 #
 struct PhotonElectronHeadsOnSystem{D <: AbstractDefiniteAxis} <: AbstractTwoBodyHeadsOnSystem
     dir::D
 end
-particle_direction(psl::PhotonElectronHeadsOnSystem) = psl.dir
+QEDbase.particle_direction(psl::PhotonElectronHeadsOnSystem) = psl.dir
 PhotonElectronHeadsOnSystem() = PhotonElectronHeadsOnSystem(ZAxis())
 
 Base.broadcastable(psl::PhotonElectronHeadsOnSystem) = Ref(psl)

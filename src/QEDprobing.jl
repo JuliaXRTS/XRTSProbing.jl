@@ -120,6 +120,7 @@ using TupleTools
 using Distributions
 using Unitful
 using HDF5
+using LinearAlgebra
 
 function hello_world()
     return "Hello, World!"

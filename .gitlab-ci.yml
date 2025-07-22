@@ -36,9 +36,15 @@ unittest:
         using Pkg
         Pkg.add("Coverage")
         using Coverage
-        c, t = get_summary(process_folder())
+        coverage = process_folder()
+        coverage = merge_coverage_counts(coverage, filter!(
+            let prefixes = (joinpath(pwd(), "src", ""),)
+                c -> any(p -> startswith(c.filename, p), prefixes)
+            end,
+            LCOV.readfolder("test")))
+        covered_lines, total_lines = get_summary(coverage)
         using Printf
-        @printf "Test coverage %.2f%%\n" 100c / t'
+        @printf "Test coverage %.2f%%\n" 100 * covered_lines / total_lines'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev' || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
 

@@ -105,6 +105,13 @@ export generate_event, generate_events
 # events container
 export Event
 
+## Data utility
+
+# grid interpolation
+
+export GridInterpolant, interpolate
+export InterpolExtrapol, InterpolEndValue, NearestInput, BelowInput, AboveInput
+
 using QEDbase
 using QEDcore
 using QEDprocesses
@@ -146,10 +153,10 @@ include("hard_scattering/thomson_scattering/kinematics.jl")
 include("hard_scattering/thomson_scattering/cross_section.jl")
 include("hard_scattering/thomson_scattering/sampler.jl")
 
+include("datautils/grid_interpolation.jl")
+
 include("medium/utils.jl")
 include("medium/temperature.jl")
-
-
 include("medium/interface.jl")
 include("medium/generic.jl")
 include("medium/electron_system/utils.jl")

@@ -1,7 +1,7 @@
-using QEDprobing
+using XRTSProbing
 using Documenter
 
-DocMeta.setdocmeta!(QEDprobing, :DocTestSetup, :(using QEDprobing); recursive = true)
+DocMeta.setdocmeta!(XRTSProbing, :DocTestSetup, :(using XRTSProbing); recursive = true)
 
 const page_rename = Dict("developer.md" => "Developer docs") # Without the numbers
 const numbered_pages = [
@@ -10,16 +10,14 @@ const numbered_pages = [
 ]
 
 makedocs(;
-    modules = [QEDprobing],
+    modules = [XRTSProbing],
     authors = "Uwe Hernandez Acosta <u.hernandez@hzdr.de>",
-    repo = "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/blob/{commit}{path}#{line}",
-    #repo = "https://github.com/QEDjl-project/QEDprobing.jl/blob/{commit}{path}#{line}",
-    sitename = "QEDprobing.jl",
-    #format = Documenter.HTML(; canonical = "https://QEDjl-project.github.io/QEDprobing.jl"),
+    repo = "https://github.com/JuliaXRTS/XRTSProbing.jl/blob/{commit}{path}#{line}",
+    sitename = "XRTSProbing.jl",
     format = Documenter.HTML(;
         prettyurls = get(ENV, "CI", "false") == "true",
-        repolink = "https://codebase.helmholtz.cloud/qedjl-applications/QEDprobing.jl/blob/{commit}{path}#{line}",
-        canonical = "https://qedjl-applications.pages.hzdr.de/qedprobing.jl",
+        repolink = "https://github.com/JuliaXRTS/XRTSProbing.jl/blob/{commit}{path}#{line}",
+        canonical = "https://JuliaXRTS.github.io/XRTSProbing.jl",
         assets = String[],
     ),
     pages = ["index.md"; numbered_pages],

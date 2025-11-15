@@ -1,7 +1,7 @@
 using Random
 using Unitful
 
-using QEDprobing
+using XRTSProbing
 
 RNG = Xoshiro(137)
 
@@ -16,7 +16,7 @@ TEMPS_eV = 1u"eV" .* (
 @testset "temp = $T" for T in TEMPS_eV
     test_dist = MaxellElectronEnergyDistribution(T)
 
-    T_internal = QEDprobing._internalize_temperature(T)
+    T_internal = XRTSProbing._internalize_temperature(T)
 
     @test isapprox(temperature(test_dist), T_internal)
     @test isapprox(energy_mean(test_dist), sqrt(8 * T_internal / pi + 1))

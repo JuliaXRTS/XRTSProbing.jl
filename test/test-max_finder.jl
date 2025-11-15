@@ -6,7 +6,7 @@ using Random
 using QEDcore
 using QEDbase
 using QEDprocesses
-using QEDprobing
+using XRTSProbing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
@@ -37,11 +37,11 @@ const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e
     @testset "p: %p" for p in QUANTILES
         test_max_finder = QuantileReductionMethod(p, Int(1.0e6))
 
-        test_max_weight = QEDprobing.findmax(RNG, DCSCACHED, test_max_finder, VP)
+        test_max_weight = XRTSProbing.findmax(RNG, DCSCACHED, test_max_finder, VP)
 
         @testset "n: %n" for n in (Int(2.0e5), Int(1.0e6))
             # groundtruth
-            samples, jac = QEDprobing._generate_coords(RNG, VP, n)
+            samples, jac = XRTSProbing._generate_coords(RNG, VP, n)
             weights = sort(@. DCSCACHED(samples) * jac)
             resid_weights = @. max(1, weights / test_max_weight)
             idx_last_unit_weight =

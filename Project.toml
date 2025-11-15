@@ -1,4 +1,4 @@
-name = "QEDprobing"
+name = "XRTSProbing"
 uuid = "fdc9d422-4d58-410b-839e-b42714d9ecda"
 authors = ["Uwe Hernandez Acosta <u.hernandez@hzdr.de"]
 version = "1.0.0-DEV"

@@ -1,5 +1,5 @@
 module Patches
-using QEDprobing
+using XRTSProbing
 using Test
 using SafeTestsets
 

@@ -6,7 +6,7 @@ using Distributions
 using QEDcore
 using QEDbase
 using QEDprocesses
-using QEDprobing
+using XRTSProbing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
@@ -86,11 +86,11 @@ end
             ph_dist = energy_spectrum(FIELD, om)
 
             @test isapprox(
-                QEDprobing._compute(TEST_PROBING_SETUP, (om, cth, phi)),
+                XRTSProbing._compute(TEST_PROBING_SETUP, (om, cth, phi)),
                 ph_dist * dsf * dcs,
             )
 
-            @test QEDprobing._compute(TEST_PROBING_SETUP, (om + UP_OM, cth, phi)) ==
+            @test XRTSProbing._compute(TEST_PROBING_SETUP, (om + UP_OM, cth, phi)) ==
                 zero(om)
         end
     end

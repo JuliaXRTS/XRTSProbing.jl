@@ -1,4 +1,4 @@
-using QEDprobing
+using XRTSProbing
 using Random
 
 include("utils.jl")

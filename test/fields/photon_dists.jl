@@ -1,4 +1,4 @@
-using QEDprobing
+using XRTSProbing
 using QEDcore
 using QEDevents
 
@@ -64,7 +64,7 @@ const OMEGA_WIDTHS = (
 
             # TODO: test `randmom` here if available
             rnd_mom = QEDevents._randmom(RNG, DIST)
-            if axis isa QEDprobing.AbstractDefiniteAxis
+            if axis isa XRTSProbing.AbstractDefiniteAxis
                 @test isapprox(getMass2(rnd_mom), 0.0)
 
                 for (i, el) in enumerate(rnd_mom)

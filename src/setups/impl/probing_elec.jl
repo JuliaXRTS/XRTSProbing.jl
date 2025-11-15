@@ -52,7 +52,7 @@ end
     phase_space_layout(differential_cross_section_setup(stp))
 @inline QEDbase.in_phase_space_layout(stp::ElectronProbingSetup) =
     in_phase_space_layout(phase_space_layout(stp))
-@inline QEDprobing.cached_coords(stp::ElectronProbingSetup) =
+@inline XRTSProbing.cached_coords(stp::ElectronProbingSetup) =
     cached_coords(differential_cross_section_setup(stp))
 
 degree_of_freedom(stp::ElectronProbingSetup{T, N}) where {T, N} = N

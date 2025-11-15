@@ -27,8 +27,8 @@ end
 function _real_lindhard_nonzero_temperature(::Degenerated, ombar::T, qbar::T, bbar::T) where {T <: Real}
 
     prefac = inv(qbar)
-    num = QEDprobing._nu_minus(ombar, qbar)
-    nup = QEDprobing._nu_plus(ombar, qbar)
+    num = XRTSProbing._nu_minus(ombar, qbar)
+    nup = XRTSProbing._nu_plus(ombar, qbar)
 
 
     if qbar < 1.0e-2 * ombar

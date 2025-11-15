@@ -1,4 +1,4 @@
-using QEDprobing
+using XRTSProbing
 using QEDcore
 using QEDevents
 

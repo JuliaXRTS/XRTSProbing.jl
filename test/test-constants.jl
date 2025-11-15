@@ -1,4 +1,4 @@
-using QEDprobing
+using XRTSProbing
 using Unitful
 
 @testset "Fine Structure Constant" begin
@@ -11,7 +11,7 @@ end
 
     # source: https://en.wikipedia.org/wiki/Hartree
     # in eV
-    groundtruth = HBARC * ALPHA / (QEDprobing.BOHR_RADIUS_ANG * 1.0e5) * 1.0e6
+    groundtruth = HBARC * ALPHA / (XRTSProbing.BOHR_RADIUS_ANG * 1.0e5) * 1.0e6
     @test isapprox(HARTREE, groundtruth, atol = 0.0, rtol = 1.0e-6)
 end
 
@@ -47,16 +47,16 @@ ne_from_rs(rs) = inv(4 * pi * rs^3 / 3)
     @testset "$rs" for (rs, gt_beta_inv_hartree, gt_kF_inv_bohr) in GROUNDTRUTH_FERMI_ENERGY
 
         ne_inv_bohr = ne_from_rs(rs)
-        kF_inv_bohr = QEDprobing._fermi_wave_vector(ne_inv_bohr)
+        kF_inv_bohr = XRTSProbing._fermi_wave_vector(ne_inv_bohr)
 
         @test isapprox(kF_inv_bohr, gt_kF_inv_bohr, atol = 0.0, rtol = 1.0e-6)
 
         ne_inv_cm = ne_inv_bohr / ((BOHR_RADIUS_ANG * 1.0e-8)^3)
 
-        ne_inv_me = QEDprobing._internalize_density(ne_inv_cm * 1u"cm^(-3)")
-        kF_me = QEDprobing._fermi_wave_vector(ne_inv_me)
+        ne_inv_me = XRTSProbing._internalize_density(ne_inv_cm * 1u"cm^(-3)")
+        kF_me = XRTSProbing._fermi_wave_vector(ne_inv_me)
 
-        EF_me = QEDprobing._fermi_energy_from_kF(kF_me)
+        EF_me = XRTSProbing._fermi_energy_from_kF(kF_me)
 
         EF_hartree = EF_me * ELECTRONMASS / HARTREE
 

@@ -1,4 +1,4 @@
-using QEDprobing
+using XRTSProbing
 using QEDbase
 using QEDbase.Mocks
 using QEDcore
@@ -12,7 +12,7 @@ include("groundtruths.jl")
 
 # setups for which the interface is implemented
 abstract type AbstractTestSetup <: AbstractComputationSetup end
-QEDprobing._compute(stp::AbstractTestSetup, x) = _groundtruth_compute(x)
+XRTSProbing._compute(stp::AbstractTestSetup, x) = _groundtruth_compute(x)
 
 # test setup
 struct TestSetup <: AbstractTestSetup end
@@ -24,7 +24,7 @@ struct TestSetupFAIL <: AbstractComputationSetup end
     @testset "interface fail" begin
         rnd_input = rand(RNG)
 
-        @test_throws MethodError QEDprobing._compute(TestSetupFAIL(), rnd_input)
+        @test_throws MethodError XRTSProbing._compute(TestSetupFAIL(), rnd_input)
         @test_throws MethodError compute(TestSetupFAIL(), rnd_input)
     end
 
@@ -33,7 +33,7 @@ struct TestSetupFAIL <: AbstractComputationSetup end
 
         rnd_input = rand(RNG)
         @test isapprox(
-            QEDprobing._compute(stp, rnd_input),
+            XRTSProbing._compute(stp, rnd_input),
             _groundtruth_compute(rnd_input),
             atol = ATOL,
             rtol = RTOL,
@@ -78,7 +78,7 @@ end
         rnd_input = rand(RNG)
         @test_throws MethodError process(TestProcessSetupFAIL())
         @test_throws MethodError model(TestProcessSetupFAIL())
-        @test_throws MethodError QEDprobing._compute(TestProcessSetupFAIL(), rnd_input)
+        @test_throws MethodError XRTSProbing._compute(TestProcessSetupFAIL(), rnd_input)
         @test_throws MethodError compute(TestProcessSetupFAIL(), rnd_input)
     end
 

@@ -17,7 +17,7 @@ If this is the first time you work with this repository, follow the instructions
 3. Add this repo as a remote:
 
    ```bash
-   git remote add upstream https://github.com/QEDjl-project/QEDprobing.jl
+   git remote add upstream https://github.com/JuliaXRTS/XRTSProbing.jl
    ```
 
 This will ensure that you have two remotes in your git: `origin` and `upstream`.

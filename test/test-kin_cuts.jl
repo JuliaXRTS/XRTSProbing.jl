@@ -1,7 +1,7 @@
 module KinCutsTests
 
 using Test
-using QEDprobing
+using XRTSProbing
 using Random
 using Distributions
 

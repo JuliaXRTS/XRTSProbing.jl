@@ -45,9 +45,9 @@ jobs:
         run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using QEDprobing
-            DocMeta.setdocmeta!(QEDprobing, :DocTestSetup, :(using QEDprobing); recursive=true)
-            doctest(QEDprobing)'
+            using XRTSProbing
+            DocMeta.setdocmeta!(XRTSProbing, :DocTestSetup, :(using XRTSProbing); recursive=true)
+            doctest(XRTSProbing)'
       - name: Generate and deploy documentation
         run: julia --project=docs docs/make.jl
         env:

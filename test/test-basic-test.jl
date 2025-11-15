@@ -1,11 +1,11 @@
-module QEDprobingTest
+module XRTSProbingTest
 
 using Test
-using QEDprobing
+using XRTSProbing
 
 
-@testset "QEDprobing.jl" begin
-    @test QEDprobing.hello_world() == "Hello, World!"
+@testset "XRTSProbing.jl" begin
+    @test XRTSProbing.hello_world() == "Hello, World!"
 end
 
 end

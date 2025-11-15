@@ -1,5 +1,5 @@
 {
-  "projectName": "QEDprobing",
-  "projectOwner": "QEDjl-project",
+  "projectName": "XRTSProbing",
+  "projectOwner": "JuliaXRTS",
   "files": ["README.md", "docs/src/index.md"]
 }

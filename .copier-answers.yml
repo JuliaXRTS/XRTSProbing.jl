@@ -6,12 +6,12 @@ CheckExplicitImports: false
 CodeOfConductContact: u.hernandez@hzdr.de
 ConfigIndentation: 2
 JuliaIndentation: 4
-JuliaMinVersion: '1.10'
+JuliaMinVersion: "1.10"
 License: MIT
 LicenseCopyrightHolders: Uwe Hernandez Acosta
 MarkdownIndentation: 2
-PackageName: QEDprobing
-PackageOwner: QEDjl-project
+PackageName: XRTSProbing
+PackageOwner: JuliaXRTS
 PackageUUID: b1dbe593-c732-5f6f-b35b-20dd91e7daab
 RunJuliaNightlyOnCI: false
 UseCirrusCI: false

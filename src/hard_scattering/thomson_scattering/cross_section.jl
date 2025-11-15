@@ -67,7 +67,7 @@ function QEDbase.unsafe_differential_cross_section(
     k = momentum(psp, Incoming(), Photon())
     k_prime = momentum(psp, Outgoing(), Photon())
     cth = _cos_delta_theta(k, k_prime)
-    return QEDprobing._TS_diffCS_pol_spin_sum(cth)
+    return XRTSProbing._TS_diffCS_pol_spin_sum(cth)
 end
 
 function _TS_diffCS_pol_spin_sum(cth)

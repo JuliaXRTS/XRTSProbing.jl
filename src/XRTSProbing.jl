@@ -1,4 +1,4 @@
-module QEDprobing
+module XRTSProbing
 
 ### Hard scattering
 

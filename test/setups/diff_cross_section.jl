@@ -8,7 +8,7 @@ using Random
 using QEDcore
 using QEDbase
 using QEDprocesses
-using QEDprobing
+using XRTSProbing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())

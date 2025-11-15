@@ -6,7 +6,7 @@ using Random
 using QEDcore
 using QEDbase
 using QEDprocesses
-using QEDprobing
+using XRTSProbing
 
 RNG = Xoshiro(137)
 ATOL = sqrt(eps())
@@ -37,7 +37,7 @@ const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e
     train!(RNG, VP, MAXITER, NCALLS)
 
     # max finding
-    test_max_weight = QEDprobing.findmax(RNG, DCSCACHED, MAXFINDER, VP)
+    test_max_weight = XRTSProbing.findmax(RNG, DCSCACHED, MAXFINDER, VP)
 
     # build event generator
     EG = EventGenerator(DCSCACHED, VP, test_max_weight)

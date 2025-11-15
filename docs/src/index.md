@@ -1,10 +1,10 @@
 ```@meta
-CurrentModule = QEDprobing
+CurrentModule = XRTSProbing
 ```
 
-# QEDprobing
+# XRTSProbing
 
-Documentation for [QEDprobing](https://github.com/QEDjl-project/QEDprobing.jl).
+Documentation for [XRTSProbing](https://github.com/JuliaXRTS/XRTSProbing.jl).
 
 ## Contributors
 

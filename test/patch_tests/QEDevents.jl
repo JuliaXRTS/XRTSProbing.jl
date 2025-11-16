@@ -12,11 +12,10 @@ PARTICLES = (Electron(), Positron(), Photon())
 N_INCOMING = 2
 N_OUTGOING = rand(RNG, 2:8)
 
-IN_PARTICLES = Tuple(rand(RNG, PARTICLES, N_INCOMING))
+IN_PARTICLES = (Electron(), rand(RNG, PARTICLES))
 OUT_PARTICLES = Tuple(rand(RNG, PARTICLES, N_INCOMING))
 
 PROC = ScatteringProcess(IN_PARTICLES, OUT_PARTICLES)
-
 MODEL = PertQED()
 INPSL = TwoBodyRestSystem()
 INCOORDS = (10.0,)

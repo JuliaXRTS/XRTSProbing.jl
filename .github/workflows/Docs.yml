@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "src/**"
       - "*.toml"
+      - "*.md"
     tags: ["*"]
   pull_request:
     branches:
@@ -16,6 +17,7 @@ on:
       - "docs/**"
       - "src/**"
       - "*.toml"
+      - "*.md"
     types: [opened, synchronize, reopened]
 
 concurrency:

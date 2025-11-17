@@ -71,5 +71,5 @@ function QEDbase.unsafe_differential_cross_section(
 end
 
 function _TS_diffCS_pol_spin_sum(cth)
-    return ALPHA_SQUARE / 2 * (1 + cth^2)
+    return ElectronicStructureModels.ALPHA_SQUARE / 2 * (1 + cth^2)
 end

@@ -4,6 +4,7 @@ using Random
 using QEDcore
 using QEDbase
 using QEDprocesses
+using ElectronicStructureModels
 using XRTSProbing
 
 RNG = Xoshiro(137)

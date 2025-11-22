@@ -6,7 +6,7 @@ struct MaxellElectronEnergyDistribution{T, D} <: AbstractElectronEnergyDistribut
     temp::T
 
     function MaxellElectronEnergyDistribution(temp::T1) where {T <: Real, T1 <: Union{T, Quantity{T}}}
-        temp_internal = _internalize_temperature(temp)
+        temp_internal = ElectronicStructureModels._internalize_temperature(temp)
         a = sqrt(temp_internal) # mass = 1.0 for Electron
         dist = QEDevents.MaxwellBoltzmann(a)
         return new{T, typeof(dist)}(dist, temp_internal)

@@ -15,5 +15,5 @@ function _findmax(method::QuantileReductionMethod, weights::AbstractVector)
             return weight
         end
     end
-    return
+    return sorted_weights[end]
 end

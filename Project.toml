@@ -25,7 +25,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 Distributions = "0.25.117"
-ElectronicStructureModels = "0.1"
+ElectronicStructureModels = "0.2"
 HDF5 = "0.17.2"
 LinearAlgebra = "1.10"
 LogExpFunctions = "0.3.29"

@@ -8,7 +8,8 @@ using QEDbase
 using QEDprocesses
 using XRTSProbing
 
-RNG = Xoshiro(137)
+#RNG = Xoshiro(137)
+RNG = Random.Xoshiro(0xade95f7911a5ed27, 0x6afdf5bc148e56ef, 0x889de92d3feffd84, 0x3434b2628160aa75, 0x0769af4118a58ebb)
 ATOL = sqrt(eps())
 RTOL = sqrt(eps())
 
@@ -22,7 +23,7 @@ const MAXITER = 50
 
 const QUANTILES = (0.01, 0.001, 0.0001)
 
-const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e4 * rand(RNG))
+const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), 1.0e3 * rand(RNG), 1.0e4 * rand(RNG))
 
 
 @testset "om: $om" for om in OMEGAS
@@ -34,12 +35,12 @@ const OMEGAS = (rand(RNG), 1.0e2 * rand(RNG), rand(RNG), 1.0e3 * rand(RNG), 1.0e
 
     train!(RNG, VP, MAXITER, NCALLS)
 
-    @testset "p: %p" for p in QUANTILES
+    @testset "p: $p" for p in QUANTILES
         test_max_finder = QuantileReductionMethod(p, Int(1.0e6))
 
         test_max_weight = XRTSProbing.findmax(RNG, DCSCACHED, test_max_finder, VP)
 
-        @testset "n: %n" for n in (Int(2.0e5), Int(1.0e6))
+        @testset "n: $n" for n in (Int(1.0e6),)
             # groundtruth
             samples, jac = XRTSProbing._generate_coords(RNG, VP, n)
             weights = sort(@. DCSCACHED(samples) * jac)

@@ -28,7 +28,7 @@ const FIELD = DistributionBasedField(PHOTONDIST)
 
 # MEDIUM
 const NE = 1.0e21u"cm^(-3)"
-const MATTERMODEL = IdealElectronSystem{ZeroTemperature}(NE)
+const MATTERMODEL = IdealElectronSystem(NE, ZeroTemperatureApprox())
 const SCREENING = Screening()
 const MEDIUM = InteractingElectronSystem(MATTERMODEL, SCREENING)
 

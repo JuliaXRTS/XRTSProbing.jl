@@ -24,6 +24,7 @@ export degree_of_freedom
 # electron distributions
 export EnergyBasedElectronDistribution
 export MaxellElectronEnergyDistribution
+export UniformElectronEnergyDistribution
 
 ### Probing Setup
 export ProbingSetup

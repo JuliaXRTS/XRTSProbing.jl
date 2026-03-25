@@ -24,3 +24,17 @@ energy_mean(en_dist::MaxellElectronEnergyDistribution{T}) where {T <: Real} = sq
 
 # FIXME: QEDevents/src/patch_Distributions.jl:61, the theta needs to be an a
 energy_width(en_dist::MaxellElectronEnergyDistribution{T}) where {T <: Real} = sqrt(var(en_dist.dist)^2 + one(T))
+
+
+### uniform electron energy distribution
+
+struct UniformElectronEnergyDistribution <: AbstractElectronEnergyDistribution end
+
+function _energy_weight(en_dist::UniformElectronEnergyDistribution, energy::T) where {T <: Real}
+    #return pdf(en_dist.dist, energy)
+    return one(T)
+end
+
+@inline energy_mean(en_dist::UniformElectronEnergyDistribution) = NaN
+
+energy_width(en_dist::UniformElectronEnergyDistribution) = NaN
